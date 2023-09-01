@@ -6,7 +6,7 @@ När vi körde `npm audit` i `/backend` så hittade vi 11 säkerhetsbrister i de
 
 `debug  <=2.6.8`
 `fresh  <0.5.2`
-`mime  <1.4.1
+`mime  <1.4.1`
 `ms  <2.0.0`
 `node-fetch  <2.6.7`
 `qs  <=6.2.3`
