@@ -4,13 +4,13 @@
 
 När vi körde `npm audit` i `/backend` så hittade vi 11 säkerhetsbrister i dessa sju paket.
 
-> debug  <=2.6.8
-> fresh  <0.5.2
-> mime  <1.4.1
-> ms  <2.0.0
-> node-fetch  <2.6.7
-> qs  <=6.2.3
-> semver  6.0.0 - 6.3.0 || 7.0.0 - 7.5.1
+> debug  <=2.6.8 
+> fresh  <0.5.2 
+> mime  <1.4.1 
+> ms  <2.0.0 
+> node-fetch  <2.6.7 
+> qs  <=6.2.3 
+> semver  6.0.0 - 6.3.0 || 7.0.0 - 7.5.1 
 
 Samtliga gick att åtgärda med hjälp av `npm audit fix`.
 
