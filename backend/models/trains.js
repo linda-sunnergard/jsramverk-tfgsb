@@ -70,6 +70,11 @@ async function fetchTrainPositions(io) {
             return
         }
     })
+
+    // mystery code? behövs denna?
+    // eventSource.onerror = function(e) {
+    //     console.log("EventSource failed.")
+    // }
     
 }
 
