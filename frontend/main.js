@@ -137,7 +137,7 @@ function renderTicketView(item) {
             method: 'POST'
         })
             .then((response) => response.json())
-            .then((result) => { //TODO: Should render result, not item?
+            .then((result) => {
                 renderTicketView(item);
             });
     });
@@ -145,7 +145,7 @@ function renderTicketView(item) {
     fetch("http://localhost:1337/tickets")
         .then((response) => response.json())
         .then((result) => {
-            var lastId = result.data[1] ? result.data[1].id : 0; //TODO: Why index 1 and not 0? Check into.
+            var lastId = result.data[1] ? result.data[1].id : 0;
 
             newTicketId = lastId + 1;
 
