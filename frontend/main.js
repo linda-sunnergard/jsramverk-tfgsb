@@ -137,7 +137,7 @@ function renderTicketView(item) {
             method: 'POST'
         })
             .then((response) => response.json())
-            .then((result) => { //TODO: Should render result, not item?
+            .then((result) => {
                 renderTicketView(item);
             });
     });
@@ -146,7 +146,7 @@ function renderTicketView(item) {
         .then((response) => response.json())
         .then((result) => {
             const ticketCount = result.data.length;
-            const newTicketNumber = ticketCount + 1;
+            const newTicketNumber = ticketCount + 1
 
             let newTicketIdSpan = document.getElementById("new-ticket-id");
 

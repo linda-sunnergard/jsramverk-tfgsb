@@ -2,7 +2,7 @@ require('dotenv').config()
 
 const express = require('express')
 const cors = require('cors')
-const morgan = require('morgan') //TODO: Not used. Look into why?
+const morgan = require('morgan')
 const bodyParser = require('body-parser')
 
 const fetchTrainPositions = require('./models/trains.js')
@@ -18,8 +18,8 @@ app.options('*', cors());
 
 app.disable('x-powered-by');
 
-app.use(bodyParser.json()); // for parsing application/json
-app.use(bodyParser.urlencoded({ extended: true })); // for parsing application/x-www-form-urlencoded
+app.use(bodyParser.json()); 
+app.use(bodyParser.urlencoded({ extended: true }));
 
 const io = require("socket.io")(httpServer, {
   cors: {

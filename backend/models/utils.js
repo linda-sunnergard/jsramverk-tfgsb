@@ -15,7 +15,7 @@ const trains = {
         } finally {
             await db.close();
         }
-    }
+    },
 };
 
 module.exports = trains;

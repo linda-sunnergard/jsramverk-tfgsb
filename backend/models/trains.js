@@ -19,12 +19,17 @@ async function fetchTrainPositions(io) {
         }
     )
     const result = await response.json()
-    const sseurl = result.RESPONSE.RESULT[0].INFO.SSEURL // TOOD: Undefined, causes crash. FIXED!
+    const sseurl = result.RESPONSE.RESULT[0].INFO.SSEURL
 
     const eventSource = new EventSource(sseurl)
-
+    
     eventSource.onopen = function() {
         console.log("Connection to server opened.")
+    }
+    
+    eventSource.onerror = function(e) {
+        console.log("EventSource failed.")
+        console.log(e)
     }
 
     io.on('connection', (socket) => {
@@ -32,6 +37,7 @@ async function fetchTrainPositions(io) {
 
         eventSource.onmessage = function (e) {
             try {
+                console.log(e)
                 const parsedData = JSON.parse(e.data);
 
                 if (parsedData) {
@@ -64,12 +70,7 @@ async function fetchTrainPositions(io) {
             return
         }
     })
-
-
-
-    eventSource.onerror = function(e) {
-        console.log("EventSource failed.")
-    }
+    
 }
 
 module.exports = fetchTrainPositions;
