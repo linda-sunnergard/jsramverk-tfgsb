@@ -29,5 +29,10 @@ jobs:
       with:
         mongodb-version: ${{ matrix.mongodb-version }}
 
-    - run: npm install
-    - run: npm test
+    - name: Build backend
+      run: npm install
+      working-directory: ./backend
+
+    - name: Test backend
+      run: npm test
+      working-directory: ./backend
