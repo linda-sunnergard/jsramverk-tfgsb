@@ -2,32 +2,31 @@ const database = require('../db/database.js');
 
 const tickets = {
     getTickets: async function getTickets(req, res){ //req never used?
-        var db = await database.openDb();
+        const db = await database.openDb();
+        const allTickets = await db.collection('tickets').find({}).toArray();
 
-        var allTickets = await db.all(`SELECT *, ROWID as id FROM tickets ORDER BY ROWID DESC`);
-
-        await db.close();
-
+        // await db.client.close();
+        // console.log(allTickets);
         return res.json({
             data: allTickets
         });
     },
 
     createTicket: async function createTicket(req, res){
-        var db = await database.openDb();
+        const db = await database.openDb();
 
-        const result = await db.run(
-            'INSERT INTO tickets (code, trainnumber, traindate) VALUES (?, ?, ?)',
-            req.body.code,
-            req.body.trainnumber,
-            req.body.traindate,
-        );
+        const doc = {
+            code: req.body.code,
+            trainnumber: req.body.trainnumber,
+            traindate: req.body.traindate
+        };
 
-        await db.close();
+        const result = await db.collection('tickets').insertOne(doc);
 
+        // console.log(result.insertedId)
         return res.json({
             data: {
-                id: result.lastID,
+                id: result.insertedId,
                 code: req.body.code,
                 trainnumber: req.body.trainnumber,
                 traindate: req.body.traindate,

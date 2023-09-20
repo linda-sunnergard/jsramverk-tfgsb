@@ -145,18 +145,17 @@ function renderTicketView(item) {
     fetch("http://localhost:1337/tickets")
         .then((response) => response.json())
         .then((result) => {
-            var lastId = result.data[1] ? result.data[1].id : 0; //TODO: Why index 1 and not 0? Check into.
-
-            newTicketId = lastId + 1;
+            const ticketCount = result.data.length;
+            const newTicketNumber = ticketCount + 1;
 
             let newTicketIdSpan = document.getElementById("new-ticket-id");
 
-            newTicketIdSpan.textContent = newTicketId;
+            newTicketIdSpan.textContent = newTicketNumber;
 
             result.data.forEach((ticket) => {
                 let element = document.createElement("div");
 
-                element.innerHTML = `${ticket.id} - ${ticket.code} - ${ticket.trainnumber} - ${ticket.traindate}`;
+                element.innerHTML = `${ticket.traindate} - ${ticket.code} - ${ticket.trainnumber} - ${ticket._id}`;
 
                 oldTickets.appendChild(element);
             });
