@@ -1,12 +1,13 @@
 name: Node.js CI
 
-on: [push, pull_request, workflow_dispatch]
+#on: [push, pull_request, workflow_dispatch]
 
-#on:
-#  push:
-#    branches: [ "main" ]
-#  pull_request:
-#    branches: [ "main" ]
+on:
+  push:
+    branches: [ "*" ]
+  pull_request:
+    branches: [ "*" ]
+  workflow_dispatch:
 
 jobs:
   build:
