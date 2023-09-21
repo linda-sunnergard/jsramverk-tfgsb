@@ -23,12 +23,12 @@ app.use(bodyParser.urlencoded({ extended: true })); // for parsing application/x
 
 const io = require("socket.io")(httpServer, {
   cors: {
-    origin: "http://localhost:9000",
+    origin: "https://www.student.bth.se",
     methods: ["GET", "POST"]
   }
 });
 
-const port = 1337
+const port = process.env.PORT || 1337;
 
 app.get('/', (req, res) => {
   res.json({
