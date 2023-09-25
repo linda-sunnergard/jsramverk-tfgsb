@@ -71,6 +71,16 @@ async function fetchTrainPositions(io) {
         }
     })
     
+    io.on('close', async () => {
+        try {
+            console.log("closing connection");
+            await eventSource.close();
+        } catch (e) {
+            console.log(e);
+        }
+        return
+    })
+    
 }
 
 module.exports = fetchTrainPositions;
