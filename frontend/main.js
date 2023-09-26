@@ -1,4 +1,8 @@
-const backendServer = "https://jsramverk-train-ades22.azurewebsites.net";
+let backendServer = "http://localhost:1337";
+
+if (window.location.host == "www.student.bth.se") {
+    backendServer = "https://jsramverk-train-ades22.azurewebsites.net";
+}
 
 function renderMainView() {
     const container = document.getElementById("container");

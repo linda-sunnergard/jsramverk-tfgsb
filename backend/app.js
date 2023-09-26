@@ -21,9 +21,16 @@ app.disable('x-powered-by');
 app.use(bodyParser.json()); // for parsing application/json
 app.use(bodyParser.urlencoded({ extended: true })); // for parsing application/x-www-form-urlencoded
 
+// Set up CORS to the correct local/remote site
+let ioOrigin = "http://localhost:9000";
+
+if (process.env.PORT) {
+  ioOrigin = "https://www.student.bth.se";
+}
+
 const io = require("socket.io")(httpServer, {
   cors: {
-    origin: "https://www.student.bth.se",
+    origin: ioOrigin,
     methods: ["GET", "POST"]
   }
 });
