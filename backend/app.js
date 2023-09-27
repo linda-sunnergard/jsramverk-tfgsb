@@ -21,18 +21,31 @@ app.disable('x-powered-by');
 app.use(bodyParser.json()); 
 app.use(bodyParser.urlencoded({ extended: true }));
 
+// Set up CORS to the correct local/remote site
+let ioOrigin = "https://www.student.bth.se";
+
+if (process.env.NODE_ENV === "development") {
+  ioOrigin = "http://localhost:5173";
+}
+
 const io = require("socket.io")(httpServer, {
   cors: {
-    origin: "http://localhost:5173",
+    origin: ioOrigin,
     methods: ["GET", "POST"]
   }
 });
 
-const port = 1337
+const port = process.env.PORT || 1337;
 
 app.get('/', (req, res) => {
   res.json({
       data: 'Hello World!'
+  })
+})
+
+app.get('/mode', (req, res) => {
+  res.json({
+      data: process.env.NODE_ENV
   })
 })
 
@@ -45,3 +58,7 @@ httpServer.listen(port, () => {
 })
 
 fetchTrainPositions(io);
+
+process.on('exit', () => {
+  io.disconnect();
+});

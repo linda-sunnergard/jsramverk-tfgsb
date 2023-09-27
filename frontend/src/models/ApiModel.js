@@ -1,7 +1,12 @@
+let backendServer = "http://localhost:1337"
+
+if (location.host === "www.student.bth.se") {
+    backendServer = "https://jsramverk-train-ades22.azurewebsites.net";
+}
 
 export default {
     delayed: async function() {
-        return fetch("http://localhost:1337/delayed")
+        return fetch(backendServer + "/delayed")
             .then((response) => response.json())
             .then((result) => {
                 // console.log(result);
@@ -10,7 +15,7 @@ export default {
     },
 
     getTickets: async function() {
-        return fetch("http://localhost:1337/tickets")
+        return fetch(backendServer + "/tickets")
             .then((response) => response.json())
             .then((result) => {
                 return result.data;
@@ -18,7 +23,7 @@ export default {
     },
 
     postTicket: async function(newCode, newTrainnumber, newTraindate) {
-        return fetch("http://localhost:1337/tickets", {
+        return fetch(backendServer + "/tickets", {
             body: JSON.stringify({
                 code: newCode,
                 trainnumber: newTrainnumber,
@@ -36,7 +41,7 @@ export default {
     },
 
     codes: async function() {
-        return fetch("http://localhost:1337/codes")
+        return fetch(backendServer + "/codes")
             .then((response) => response.json())
             .then((result) => {
                 return result.data;

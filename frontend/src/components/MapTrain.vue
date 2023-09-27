@@ -1,11 +1,27 @@
 <script setup>
 import { io } from "socket.io-client";
-import L from "leaflet";
 import 'leaflet/dist/leaflet.css';
+import L from "leaflet";
+
 import { onMounted } from 'vue';
+let socketIo = "http://localhost:1337";
+
+if (location.host === "www.student.bth.se") {
+    socketIo = "https://jsramverk-train-ades22.azurewebsites.net";
+}
+
+const mapIcon = L.icon({
+    iconUrl: 'https://unpkg.com/leaflet@1.9.4/dist/images/marker-icon.png',
+    iconSize: [25, 41],
+    iconAnchor: [10, 41],
+    popupAnchor: [2, -40],
+    shadowUrl: 'https://unpkg.com/leaflet@1.9.4/dist/images/marker-shadow.png',
+    // shadowSize: [68, 95],
+    // shadowAnchor: [22, 94]
+});
 
 onMounted(() => {
-    const socket = io("http://localhost:1337");
+    const socket = io(socketIo);
     const map = L.map('map').setView([62.173276, 14.942265], 5);
 
 
@@ -22,17 +38,23 @@ onMounted(() => {
 
                 marker.setLatLng(data.position);
             } else {
-                let marker = L.marker(data.position).bindPopup(data.trainnumber).addTo(map);
+                let marker = L.marker(data.position, {icon: mapIcon}).bindPopup(data.trainnumber).addTo(map);
 
                 markers[data.trainnumber] = marker
             }
             
         });
 })
-
 </script>
 
 <template>
-    <div ref="map" id="map" class="map">Loading...</div>
+    <!-- <div ref="map" id="map" class="map">Loading...</div> */ -->
+    <l-map class="map" id="map" ref="map" v-model:zoom="zoom" :center="[62.173276, 14.942265]">
+      <l-tile-layer
+        url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
+        layer-type="base"
+        name="OpenStreetMap"
+      ></l-tile-layer>
+    </l-map>
 </template>
 
