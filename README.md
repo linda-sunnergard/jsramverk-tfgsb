@@ -23,3 +23,7 @@ När vi sedan startade frontend med `python3 -m http.server 9000` gick det att n
 ## Val av ramverk
 
 Vi väljer att implementera vue till frontend-appen.
+
+## Förbättringspotential
+- Göra om asynkrona delar till reaktiva props.
+- Utveckla frontend-tester?
