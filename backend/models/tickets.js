@@ -1,7 +1,7 @@
 const database = require('../db/database.js');
 
 const tickets = {
-    getTickets: async function getTickets(req, res){ //req never used?
+    getTickets: async function getTickets(req, res){
         const db = await database.openDb();
         const allTickets = await db.collection('tickets').find({}).toArray();
 

@@ -14,7 +14,7 @@ const codes = {
             </REQUEST>`;
 
 
-            const response = fetch(
+            return fetch(
                 "https://api.trafikinfo.trafikverket.se/v2/data.json", {
                     method: "POST",
                     body: query,
