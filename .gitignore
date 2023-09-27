@@ -1,2 +1,5 @@
 #ignore .env files
 .env
+backend/coverage/
+backend/node_modules/
+frontend/node_modules/
