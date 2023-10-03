@@ -163,52 +163,45 @@ const auth = {
         const token = jwt.sign(payload, secret, {expiresIn: tokenExpiration});
 
         return token;
+    },
+
+    verifyToken: function(token) {
+        const secret = process.env.JWT_SECRET;
+        let success = false;
+        let payload = {};
+
+        jwt.verify(token, secret, function(err, decoded) {
+            if (err) {
+                return;
+            }
+
+            success = true;
+            payload = decoded;
+            return;
+        });
+
+        return {
+            success: success,
+            payload: payload
+        };
+    },
+
+    verify: function(req, res, next) {
+        const token = req.headers['x-access-token'];
+        const result = auth.verifyToken(token);
+
+        if (result.success) {
+            next();
+            return;
+        }
+        
+        return res.json({
+            data: {
+                message: "Error: No valid login token.",
+                failedVerification: true
+            }
+        });
     }
 };
 
 module.exports = auth;
-
-// const tickets = {
-//     getTickets: async function getTickets(req, res){
-//         const db = await database.openDb();
-//         const allTickets = await db.collection('tickets').find({}).toArray();
-
-//         // await db.client.close();
-//         // console.log(allTickets);
-//         return res.json({
-//             data: allTickets
-//         });
-//     },
-
-//     createTicket: async function createTicket(req, res){
-//         const db = await database.openDb();
-
-//         const doc = {
-//             code: req.body.code,
-//             trainnumber: req.body.trainnumber,
-//             traindate: req.body.traindate
-//         };
-
-//         const result = await db.collection('tickets').insertOne(doc);
-
-//         // console.log(result.insertedId)
-//         return res.json({
-//             data: {
-//                 id: result.insertedId,
-//                 code: req.body.code,
-//                 trainnumber: req.body.trainnumber,
-//                 traindate: req.body.traindate,
-//             }
-//         });
-//     }
-// };
-
-
-
-// const myPlaintextPassword = 'longandhardP4$w0rD';
-// const hash = 'superlonghashedpasswordfetchedfromthedatabase';
-
-// bcrypt.compare(myPlaintextPassword, hash, function(err, res) {
-//     // res innehåller nu true eller false beroende på om det är rätt lösenord.
-// });
-
