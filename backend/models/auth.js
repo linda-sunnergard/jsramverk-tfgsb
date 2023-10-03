@@ -1,6 +1,9 @@
 const bcrypt = require('bcryptjs');
+const jwt = require('jsonwebtoken');
+
 const database = require('../db/database');
-const tokenTimeLimit = "1h";
+
+const tokenExpiration = "1h";
 
 const auth = {
     /**
@@ -64,22 +67,37 @@ const auth = {
                 }
 
                 // Create user and get the response
-                // const createResult = await db.collection('users').insertOne(doc);
-                await db.collection('users').insertOne(doc);
+                const insertResult = await db.collection('users').insertOne(doc);
+                // const userid = await db.collection('users').insertOne(doc).getInsertedId();
 
                 // TODO: Check result for errors somehow
+                if (!insertResult.insertedId) {
+                    return res.json({
+                        data: {
+                            message: "Error: Problem inserting document in database."
+                        }
+                    });
+                }
+
+                const payload = {
+                    username: newUser,
+                    userid: insertResult.insertedId
+                }
+                const token = auth.checkoutToken(payload);
 
                 // Return a confirmation. 
                 // TODO: Return json web token at this point as well
                 return res.json({
                     data: {
                         message: "User created successfully.",
-                        username: newUser
+                        username: newUser,
+                        token: token
                     }
                 });
             });
         });
     },
+
     loginUser: async function(req, res) {
         // Make sure there is both a username and a password
         if (!req.body.username || !req.body.password) {
@@ -104,8 +122,9 @@ const auth = {
             });
         }
 
-        console.log(readResult);
+        // console.log(readResult);
         const hash = readResult[0].password;
+        const userid = readResult[0]._id;
 
         bcrypt.compare(req.body.password, hash, (err, compareResult) => {
             if (err) {
@@ -115,14 +134,19 @@ const auth = {
                     }
                 });
             } else if (compareResult) {
+                const payload = {
+                    username: newUser,
+                    userid: userid
+                };
+                const token = auth.checkoutToken(payload);
+
                 return res.json({
                     data: {
                         message: "Login successful.",
                         username: newUser,
-                        token: ""
+                        token: token
                     }
                 });
-                
             }
             return res.json({
                 data: {
@@ -131,14 +155,15 @@ const auth = {
             });
         });
 
-        return res.json({
-            data: {
-                message: "Error: Unknown login error."
-            }
-        });
-    }
+        return;
+    },
 
-    // checkoutToken: function(payload)
+    checkoutToken: function(payload) {
+        const secret = process.env.JWT_SECRET;
+        const token = jwt.sign(payload, secret, {expiresIn: tokenExpiration});
+
+        return token;
+    }
 };
 
 module.exports = auth;
