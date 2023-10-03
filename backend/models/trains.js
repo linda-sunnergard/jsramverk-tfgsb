@@ -37,7 +37,7 @@ async function fetchTrainPositions(io) {
 
         eventSource.onmessage = function (e) {
             try {
-                console.log(e)
+                // console.log(e)
                 const parsedData = JSON.parse(e.data);
 
                 if (parsedData) {
