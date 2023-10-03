@@ -13,17 +13,17 @@
 }
 
 .login > *:not(:last-child),
-.login form > *:not(:last-child) {
+form.login-form > *:not(:last-child) {
     margin-bottom: 1rem;
 }
 
-.login form {
+.login-form {
     display: flex;
     flex-direction: column;
     width: 100%;
 }
 
-.login input {
+.login-form input {
     height: 2rem;
     padding: 5px;
 }

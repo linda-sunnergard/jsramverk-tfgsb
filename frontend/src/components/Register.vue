@@ -15,7 +15,7 @@
         <div class="login">
             <h1>Registrera användare</h1>
 
-            <form @submit.prevent="submitLogin($event)">
+            <form class="login-form" @submit.prevent="submitLogin($event)">
                 <input type="text" placeholder="Användarnamn">
                 <input type="password" placeholder="Lösenord">
                 <input type="password" placeholder="Bekräfta lösenord">

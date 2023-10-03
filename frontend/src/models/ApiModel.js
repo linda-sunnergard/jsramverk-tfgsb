@@ -1,8 +1,4 @@
-let backendServer = "http://localhost:1337"
-
-if (location.host === "www.student.bth.se") {
-    backendServer = "https://jsramverk-train-ades22.azurewebsites.net";
-}
+let backendServer = import.meta.env.VITE_BACKEND;
 
 export default {
     delayed: async function() {
