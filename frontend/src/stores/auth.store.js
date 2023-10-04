@@ -11,8 +11,6 @@ export const useAuthStore = defineStore({
     }),
     actions: {
         async login(username, password) {
-            console.log("före")
-
             const data = await fetch(backendServer + "/auth/login", {
                 body: JSON.stringify({ username, password }),
                 headers: {
@@ -29,6 +27,29 @@ export const useAuthStore = defineStore({
             this.username = data.username;
             this.userid = data.userid;
         },
+
+        async register(username, password) {
+            console.log("före")
+
+            const data = await fetch(backendServer + "/auth/register", {
+                body: JSON.stringify({ username, password }),
+                headers: {
+                    'content-type': 'application/json'
+                },
+                method: 'POST'
+            })
+                .then((response) => response.json())
+                .then((result) => {
+                    return result.data;
+            });
+
+            this.token = data.token;
+            this.username = data.username;
+            this.userid = data.userid;
+
+            return data;
+        },
+
         logout() {
             this.token = null;
             this.username = null;

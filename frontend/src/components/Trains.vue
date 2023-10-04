@@ -1,6 +1,6 @@
 <script setup>
     import { useRouter } from 'vue-router';
-    import { onMounted, ref } from 'vue';
+    import { ref } from 'vue';
 
     import { useAuthStore } from '../stores/auth.store';
     import api from '../models/ApiModel.js';
