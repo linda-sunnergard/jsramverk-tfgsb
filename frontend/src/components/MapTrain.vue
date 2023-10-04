@@ -2,13 +2,10 @@
 import { io } from "socket.io-client";
 import 'leaflet/dist/leaflet.css';
 import L from "leaflet";
+import { onMounted, ref } from 'vue';
 
-import { onMounted } from 'vue';
-let socketIo = "http://localhost:1337";
-
-if (location.host === "www.student.bth.se") {
-    socketIo = "https://jsramverk-train-ades22.azurewebsites.net";
-}
+const socketIo = import.meta.env.VITE_BACKEND;
+const zoom = ref(5);
 
 const mapIcon = L.icon({
     iconUrl: 'https://unpkg.com/leaflet@1.9.4/dist/images/marker-icon.png',
@@ -50,11 +47,8 @@ onMounted(() => {
 <template>
     <!-- <div ref="map" id="map" class="map">Loading...</div> */ -->
     <l-map class="map" id="map" ref="map" v-model:zoom="zoom" :center="[62.173276, 14.942265]">
-      <l-tile-layer
-        url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
-        layer-type="base"
-        name="OpenStreetMap"
-      ></l-tile-layer>
+
     </l-map>
+    <!-- <div id="map" zoom="5" center="[62.173276, 14.942265]"></div> -->
 </template>
 

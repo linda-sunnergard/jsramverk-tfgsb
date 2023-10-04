@@ -1,15 +1,14 @@
 <script setup>
-    import { defineAsyncComponent, ref } from 'vue'
+    import TicketComponent from '../components/TicketComponent.vue';
+    // import { defineAsyncComponent, ref } from 'vue'
 
-    const TicketComponent = defineAsyncComponent(() =>
-        import('../components/TicketComponent.vue')
-    )
+    // const TicketComponent = defineAsyncComponent(() =>
+    //     import('../components/TicketComponent.vue')
+    // )
 </script>
 
 <template>
-    <Suspense>
-        <TicketComponent />
-    </Suspense>
+    <TicketComponent />
 </template>
 
 <style>

@@ -99,6 +99,7 @@ const auth = {
     },
 
     loginUser: async function(req, res) {
+        console.log("Attempted login");
         // Make sure there is both a username and a password
         if (!req.body.username || !req.body.password) {
             return res.json({

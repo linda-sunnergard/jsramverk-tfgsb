@@ -56,7 +56,7 @@ app.get('/mode', (req, res) => {
 app.use("/auth", auth);
 
 // Require token verification middleware for all remaining routes
-app.use(authModel.verify);
+// app.use(authModel.verify);
 
 app.use("/delayed", delayed);
 app.use("/tickets", tickets);
