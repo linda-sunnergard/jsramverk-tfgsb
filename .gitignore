@@ -1,2 +1,6 @@
 #ignore .env files
 .env
+
+node_modules/
+coverage/
+cypress/
