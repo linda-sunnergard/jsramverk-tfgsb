@@ -1,14 +1,16 @@
 <script setup>
-    import { inject } from 'vue'
+    import { inject, ref } from 'vue'
     import api from '../models/ApiModel.js';
-    import { useRouter, useRoute } from 'vue-router';
+    import { RouterLink, useRouter } from 'vue-router';
+
+    const codes = ref([])
 
     const {currentTrainRef, updateCurrentTrainRef} = inject('currentTrainRef');
-    const activityId = currentTrainRef.value.ActivityId;
-    const codes = await api.codes();
     const router = useRouter();
     let selected;
     const {currentTicket, updateCurrentTicket} = inject('currentTicket');
+
+    api.codes().then((result) => { codes.value = result });
 
     function updateTicket (selected, currentTicket) {
         if (selected === undefined) {
@@ -18,11 +20,11 @@
         const code = selected;
         const newTicket = api.updateTicket(id, code);
         updateCurrentTicket(newTicket);
-        router.push({name: 'ticket', params: { activityId: activityId }});;
+        router.push({name: 'ticket'});;
     };
 
     function handleBackButton() {
-        router.push({name: 'ticket', params: { activityId: activityId }});
+        router.push({name: 'ticket'});
     }
 
 </script>
@@ -31,10 +33,11 @@
         <div class="ticket-container">
         <div class="ticket">
             <div class="old-tickets" id="old-tickets">
+            <!-- <a href="/ticket" @click.prevent="handleBackButton">&lt- Tillbaka</a> -->
+            <RouterLink to="/ticket">&lt- Tillbaka</RouterLink>
             <h1>Nuvarande ärende</h1>
                 <div>{{ currentTicket.traindate }} - {{ currentTicket.code }} - {{ currentTicket.trainnumber }} - {{ currentTicket._id }} </div>
             </div>
-            <button @click="handleBackButton()">&lt- Tillbaka</button>
             <h3>Ändra ärende</h3>
             <form id="new-ticket-form" @submit.prevent="updateTicket(selected, currentTicket)">
                 <label>Orsakskod</label><br>

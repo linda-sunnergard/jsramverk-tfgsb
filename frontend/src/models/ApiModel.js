@@ -32,7 +32,7 @@ async function postFetcher(route, body) {
     })
         .then((response) => response.json())
         .then((result) => {
-            console.log(result);
+            // console.log(result);
             return result.data;
         });
 };
@@ -46,8 +46,9 @@ export default {
         return await getFetcher(backendServer + "/tickets");
     },
 
+    // not implemented on backend
     // getTicket: async function(ticketId) {
-    //     return await getFetcher(backendServer + "/tickets" + ticketId);
+    //     return await getFetcher(backendServer + "/tickets/" + ticketId);
     // },
 
     postTicket: async function(newCode, newTrainnumber, newTraindate) {
@@ -61,19 +62,6 @@ export default {
     },
 
     updateTicket: async function(ticketId, newCode) {
-        // return fetch(backendServer + "/tickets/" + ticketId, {
-        //     body: JSON.stringify({
-        //         code: newCode,
-        //     }),
-        //     headers: {
-        //       'content-type': 'application/json'
-        //     },
-        //     method: 'POST'
-        // })
-        //     .then((response) => response.json())
-        //     .then((result) => {
-        //         return result.data;
-        //     });
         return await postFetcher(
             backendServer + "/tickets/" + ticketId,
             { code: newCode }

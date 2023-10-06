@@ -1,5 +1,5 @@
 <script setup>
-    import { RouterLink, useRouter, useRoute } from 'vue-router';
+    import { RouterLink, useRouter } from 'vue-router';
     import { ref } from 'vue';
 
     import { useAuthStore } from '../stores/auth.store';
@@ -8,9 +8,7 @@
     const username = ref("");
     const password = ref("");
 
-    function submitLogin(event) {
-        console.log(username.value);
-        console.log(password.value);
+    function submitLogin() {
         const authStore = useAuthStore();
 
         authStore.login(username.value, password.value)

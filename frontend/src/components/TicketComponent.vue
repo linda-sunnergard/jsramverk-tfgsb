@@ -1,18 +1,15 @@
 <script setup>
     import api from '../models/ApiModel.js';
     import utils from '../models/Utils.js';
-    import { useRouter, useRoute } from 'vue-router';
+    import { useRouter } from 'vue-router';
     import { ref } from 'vue';
     import { inject } from 'vue';
 
     const router = useRouter();
-    const route = useRoute();
-    const activityIdInRoute = ref(route.params.activityId);
 
     const trains = ref([]);
     const tickets = ref([]);
     const codes = ref([]);
-    const currentTrain = ref({});
     const selected = ref({});
     const {currentTicket, updateCurrentTicket} = inject('currentTicket');
     const {currentTrainRef, updateCurrentTrainRef} = inject('currentTrainRef');
@@ -20,16 +17,6 @@
     function updateTrains() {
         api.delayed().then((result) => {
             trains.value = result;
-
-            // for (const train of trains.value) {
-            //     if (train.ActivityId === activityIdInRoute.value) {
-            //         currentTrain.value = train;
-            //     }
-            // }
-
-            // if (currentTrain.value.ActivityId === undefined) {
-            //     router.push("/home");
-            // }
         });
     }
 

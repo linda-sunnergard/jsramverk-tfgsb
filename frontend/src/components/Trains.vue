@@ -1,5 +1,5 @@
 <script setup>
-    import { useRouter } from 'vue-router';
+    import { RouterLink, useRouter } from 'vue-router';
     import { ref } from 'vue';
 
     import { useAuthStore } from '../stores/auth.store';
@@ -17,20 +17,19 @@
 
     function ticketHref(train) {
         updateCurrentTrainRef(train)
-        console.log(currentTrainRef);
+        // console.log(currentTrainRef);
         router.push({path: "/ticket/"});
     };
 
     function logout() {
         const authStore = useAuthStore();
         authStore.logout()
-        router.push('/');
     }
 </script>
 
 <template>
     <div class="delayed">
-        <a href="#/" @click.prevent="logout">&lt- Logga ut</a>
+        <RouterLink to="/" @click="logout">&lt- Logga ut</RouterLink>
         <h1>Försenade tåg</h1>
 
         <div id="delayed-trains" class="delayed-trains" v-for="item in delayedTrains">
