@@ -57,4 +57,3 @@ onMounted(() => {
       ></l-tile-layer>
     </l-map>
 </template>
-

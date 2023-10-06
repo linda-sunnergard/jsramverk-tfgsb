@@ -24,7 +24,7 @@ app.use(bodyParser.urlencoded({ extended: true }));
 // Set up CORS to the correct local/remote site
 let ioOrigin = "https://www.student.bth.se";
 
-if (process.env.NODE_ENV === "development") {
+if (process.env.NODE_ENV == "development") {
   ioOrigin = "http://localhost:5173";
 }
 

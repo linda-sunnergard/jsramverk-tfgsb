@@ -22,12 +22,36 @@ export default {
             });
     },
 
+    getTicket: async function(ticketId) {
+        return fetch(backendServer + "/tickets" + ticketId)
+            .then((response) => response.json())
+            .then((result) => {
+                return result.data;
+            });
+    },
+
     postTicket: async function(newCode, newTrainnumber, newTraindate) {
         return fetch(backendServer + "/tickets", {
             body: JSON.stringify({
                 code: newCode,
                 trainnumber: newTrainnumber,
                 traindate: newTraindate,
+            }),
+            headers: {
+              'content-type': 'application/json'
+            },
+            method: 'POST'
+        })
+            .then((response) => response.json())
+            .then((result) => {
+                return result.data;
+            });
+    },
+
+    updateTicket: async function(ticketId, newCode) {
+        return fetch(backendServer + "/tickets/" + ticketId, {
+            body: JSON.stringify({
+                code: newCode,
             }),
             headers: {
               'content-type': 'application/json'

@@ -2,12 +2,16 @@
     import api from '../models/ApiModel.js';
     import utils from '../models/Utils.js';
     import { useRouter } from 'vue-router';
+    import { inject } from 'vue';
 
+    const {currentTrainRef, updateCurrentTrainRef} = inject('currentTrainRef');
     const delayedTrains = await api.delayed();
     const router= useRouter();
 
     function ticketHref(train) {
-        router.push({path: "/ticket/" + train.ActivityId });
+        updateCurrentTrainRef(train)
+        console.log(currentTrainRef);
+        router.push({path: "/ticket/"});
     };
 </script>
 

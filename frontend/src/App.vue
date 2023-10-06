@@ -1,9 +1,32 @@
 <script setup>
 import { RouterLink, RouterView } from 'vue-router'
+import { provide, ref } from 'vue'
+
+const currentTicket = ref({});
+
+function updateCurrentTicket(newTicket) {
+  currentTicket.value = newTicket
+}
+
+provide('currentTicket', {
+  currentTicket,
+  updateCurrentTicket
+})
+
+const currentTrainRef = ref({});
+
+function updateCurrentTrainRef(newTicket) {
+  currentTrainRef.value = newTicket
+}
+
+provide('currentTrainRef', {
+  currentTrainRef,
+  updateCurrentTrainRef
+})
+
 </script>
 
 <template>
-
   <RouterView />
 </template>
 
