@@ -3,10 +3,7 @@
     import { ref } from 'vue';
 
     import { useAuthStore } from '../stores/auth.store';
-    import api from '../models/ApiModel.js';
-    import utils from '../models/Utils.js';
 
-    const route = useRoute();
     const router= useRouter();
     const username = ref("");
     const password = ref("");
@@ -26,7 +23,7 @@
             });
 
             // return
-    };
+    }
 </script>
 
 <template>

@@ -21,11 +21,9 @@
         authStore.register(usernameReg.value, passwordReg.value)
             .then((result) => {
                 if (result.message.startsWith("Error")) {
-                    console.log("fel");
                     registerErrorHandler(result);
                     return;
                 }
-                console.log("framgång")
                 router.push('/home');
             })
             .catch(() => {

@@ -2,7 +2,7 @@
     import api from '../models/ApiModel.js';
     import utils from '../models/Utils.js';
     import { useRouter, useRoute } from 'vue-router';
-    import { onMounted, ref } from 'vue';
+    import { ref } from 'vue';
 
     const router = useRouter();
     const route = useRoute();
