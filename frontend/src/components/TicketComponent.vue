@@ -72,7 +72,7 @@
 <template>
     <div class="ticket-container">
         <div class="ticket">
-            <RouterLink to="/">&lt- Tillbaka</RouterLink>
+            <RouterLink to="/home">&lt- Tillbaka</RouterLink>
             <h1>Nytt ärende #{{ tickets.length + 1 }}</h1>
             <h3 v-if="currentTrainRef.FromLocation">
                 {{ "Tåg från " + currentTrainRef.FromLocation[0].LocationName + " till " + currentTrainRef.ToLocation[0].LocationName + ". Just nu i " + currentTrainRef.LocationSignature + "." }}
