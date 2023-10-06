@@ -3,6 +3,7 @@
     import utils from '../models/Utils.js';
     import { useRouter, useRoute } from 'vue-router';
     import { ref } from 'vue';
+    import { inject } from 'vue';
 
     const router = useRouter();
     const route = useRoute();
@@ -13,20 +14,22 @@
     const codes = ref([]);
     const currentTrain = ref({});
     const selected = ref({});
+    const {currentTicket, updateCurrentTicket} = inject('currentTicket');
+    const {currentTrainRef, updateCurrentTrainRef} = inject('currentTrainRef');
 
     function updateTrains() {
         api.delayed().then((result) => {
             trains.value = result;
 
-            for (const train of trains.value) {
-                if (train.ActivityId === activityIdInRoute.value) {
-                    currentTrain.value = train;
-                }
-            }
+            // for (const train of trains.value) {
+            //     if (train.ActivityId === activityIdInRoute.value) {
+            //         currentTrain.value = train;
+            //     }
+            // }
 
-            if (currentTrain.value.ActivityId === undefined) {
-                router.push("/home");
-            }
+            // if (currentTrain.value.ActivityId === undefined) {
+            //     router.push("/home");
+            // }
         });
     }
 
@@ -52,25 +55,30 @@
             return;
         };
         const code = selectedCode;
-        const trainNumber = currentTrain.value.OperationalTrainNumber;
-        const trainDate = currentTrain.value.EstimatedTimeAtLocation.substring(0, 10);
+        const trainNumber = currentTrainRef.value.OperationalTrainNumber;
+        const trainDate = currentTrainRef.value.EstimatedTimeAtLocation.substring(0, 10);
         console.log(code, trainNumber, trainDate);
         api.postTicket(code, trainNumber, trainDate).then(() => {
             updateTickets();
         });
     };
+
+    function handleTicketUpdate(ticket) {
+        updateCurrentTicket(ticket)
+        router.push("/update/");
+    }
 </script>
 
 <template>
     <div class="ticket-container">
         <div class="ticket">
-            <RouterLink to="/home">&lt- Tillbaka</RouterLink>
+            <RouterLink to="/">&lt- Tillbaka</RouterLink>
             <h1>Nytt ärende #{{ tickets.length + 1 }}</h1>
-            <h3 v-if="currentTrain.FromLocation">
-                {{ "Tåg från " + currentTrain.FromLocation[0].LocationName + " till " + currentTrain.ToLocation[0].LocationName + ". Just nu i " + currentTrain.LocationSignature + "." }}
+            <h3 v-if="currentTrainRef.FromLocation">
+                {{ "Tåg från " + currentTrainRef.FromLocation[0].LocationName + " till " + currentTrainRef.ToLocation[0].LocationName + ". Just nu i " + currentTrainRef.LocationSignature + "." }}
             </h3>
-            <p><strong>Försenad:</strong> {{ utils.outputDelay(currentTrain) }}</p>
-            <form id="new-ticket-form" @submit.prevent="submitTicket(selected)">
+            <p><strong>Försenad:</strong> {{ utils.outputDelay(currentTrainRef) }}</p>
+            <form id="new-ticket-form" @submit.prevent="submitTicket(selected, currentTrainRef)">
                 <label>Orsakskod</label><br>
                 <select id="reason-code" v-model="selected">
                     <option 
@@ -87,12 +95,13 @@
         <div class="old-tickets" id="old-tickets">
             <h2>Befintliga ärenden</h2>
             <div v-for="ticket in tickets">
-                <div>{{ ticket.traindate }} - {{ ticket.code }} - {{ ticket.trainnumber }} - {{ ticket._id }}</div>
+                <div>
+                    {{ ticket.traindate }} - {{ ticket.code }} - {{ ticket.trainnumber }} - {{ ticket._id }}
+                    <button @click="handleTicketUpdate(ticket)">Uppdatera ärende</button>
+                </div>
             </div>
         </div>
     </div>
 </template>
 
-<style>
-
-</style>
+<!-- // Using https://vuejs.org/guide/essentials/event-handling.html -->

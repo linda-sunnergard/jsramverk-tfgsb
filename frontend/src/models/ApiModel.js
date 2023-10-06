@@ -46,6 +46,14 @@ export default {
         return await getFetcher(backendServer + "/tickets");
     },
 
+    getTicket: async function(ticketId) {
+        return fetch(backendServer + "/tickets" + ticketId)
+            .then((response) => response.json())
+            .then((result) => {
+                return result.data;
+            });
+    },
+
     postTicket: async function(newCode, newTrainnumber, newTraindate) {
         return await postFetcher(
             backendServer + "/tickets",
@@ -54,6 +62,22 @@ export default {
                 trainnumber: newTrainnumber,
                 traindate: newTraindate
         });
+    },
+
+    updateTicket: async function(ticketId, newCode) {
+        return fetch(backendServer + "/tickets/" + ticketId, {
+            body: JSON.stringify({
+                code: newCode,
+            }),
+            headers: {
+              'content-type': 'application/json'
+            },
+            method: 'POST'
+        })
+            .then((response) => response.json())
+            .then((result) => {
+                return result.data;
+            });
     },
 
     codes: async function() {

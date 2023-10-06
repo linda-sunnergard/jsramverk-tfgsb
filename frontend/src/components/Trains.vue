@@ -5,7 +5,9 @@
     import { useAuthStore } from '../stores/auth.store';
     import api from '../models/ApiModel.js';
     import utils from '../models/Utils.js';
+    import { inject } from 'vue';
 
+    const {currentTrainRef, updateCurrentTrainRef} = inject('currentTrainRef');
     const router= useRouter();
     const delayedTrains = ref([]);
 
@@ -14,7 +16,9 @@
     });
 
     function ticketHref(train) {
-        router.push({path: "/ticket/" + train.ActivityId });
+        updateCurrentTrainRef(train)
+        console.log(currentTrainRef);
+        router.push({path: "/ticket/"});
     };
 
     function logout() {

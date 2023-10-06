@@ -49,6 +49,4 @@ onMounted(() => {
     <l-map class="map" id="map" ref="map" v-model:zoom="zoom" :center="[62.173276, 14.942265]">
 
     </l-map>
-    <!-- <div id="map" zoom="5" center="[62.173276, 14.942265]"></div> -->
 </template>
-
