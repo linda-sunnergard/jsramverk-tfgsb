@@ -11,27 +11,20 @@
     const message = ref("")
     const regex = "(?=.*[a-z])(?=.*[A-Z])(?=.*[0-9])(?=.*[^A-Za-z0-9])(?=.{8,})";
 
-    function submitRegister(event) {
+    async function submitRegister() {
         if (!checkPassword(passwordReg.value, password2Reg.value)) {
             return
         }
 
         const authStore = useAuthStore();
+        const register = await authStore.register(usernameReg.value, passwordReg.value);
 
-        authStore.register(usernameReg.value, passwordReg.value)
-            .then((result) => {
-                if (result.message.startsWith("Error")) {
-                    registerErrorHandler(result);
-                    return;
-                }
-                router.push('/home');
-            })
-            .catch(() => {
-                console.error("Error logging in.");
-                router.push('/');
-            });
-
-            // return
+        console.log(register)
+        if (register.success) {
+            router.push('/home');
+        } else {
+            registerErrorHandler(register);
+        }
     };
 
     function printMessage(msg) {

@@ -15,7 +15,7 @@
     const {currentTrainRef, updateCurrentTrainRef} = inject('currentTrainRef');
 
     function updateTrains() {
-        api.delayed().then((result) => {
+        api.getDelayedTrains().then((result) => {
             trains.value = result;
         });
     }
@@ -27,7 +27,7 @@
     }
 
     function updateCodes() {
-        api.codes().then((result) => {
+        api.getCodes().then((result) => {
             codes.value = result;
         });
     }
@@ -44,7 +44,6 @@
         const code = selectedCode;
         const trainNumber = currentTrainRef.value.OperationalTrainNumber;
         const trainDate = currentTrainRef.value.EstimatedTimeAtLocation.substring(0, 10);
-        console.log(code, trainNumber, trainDate);
         api.postTicket(code, trainNumber, trainDate).then(() => {
             updateTickets();
         });

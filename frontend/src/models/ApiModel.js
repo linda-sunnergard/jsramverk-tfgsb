@@ -2,48 +2,54 @@ import { useAuthStore } from '../stores/auth.store.js';
 
 const backendServer = import.meta.env.VITE_BACKEND;
 
-async function getFetcher(route) {
+async function graphqlQuery(query) {
     const authStore = useAuthStore();
 
-    return fetch(route, {
+    return fetch(backendServer + "/graphql", {
+        body: JSON.stringify({query: query}),
         headers: {
-            'content-type': 'application/json',
-            'x-access-token': authStore.token
-        },
-        method: 'GET'
-    })
-        .then((response) => response.json())
-        .then((result) => {
-            // console.log(result);
-            return result.data;
-        });
-};
-
-async function postFetcher(route, body) {
-    const authStore = useAuthStore();
-
-    return fetch(route, {
-        body: JSON.stringify(body),
-        headers: {
-            'content-type': 'application/json',
-            'x-access-token': authStore.token
+            'Content-Type': 'application/json',
+            'Accept': 'application/json',
+            'X-Access-Token': authStore.token
         },
         method: 'POST'
     })
         .then((response) => response.json())
         .then((result) => {
-            // console.log(result);
-            return result.data;
+            // console.log(result.data);
+            return result;
         });
-};
+}
 
 export default {
-    delayed: async function() {
-        return await getFetcher(backendServer + "/delayed");
+    getDelayedTrains: async function() {
+        const response = await graphqlQuery(`{
+            delayed {
+                ActivityId,
+                OperationalTrainNumber,
+                LocationSignature,
+                FromLocation,
+                ToLocation,
+                AdvertisedTimeAtLocation,
+                EstimatedTimeAtLocation
+            }
+        }`);
+
+        return response.data.delayed;
     },
 
     getTickets: async function() {
-        return await getFetcher(backendServer + "/tickets");
+        // return await getFetcher(backendServer + "/tickets");
+        const response = await graphqlQuery(`{
+            tickets {
+                _id,
+                code,
+                trainnumber,
+                traindate
+            }
+        }`);
+
+        return response.data.tickets;
     },
 
     // not implemented on backend
@@ -52,23 +58,43 @@ export default {
     // },
 
     postTicket: async function(newCode, newTrainnumber, newTraindate) {
-        return await postFetcher(
-            backendServer + "/tickets",
-            {
-                code: newCode,
-                trainnumber: newTrainnumber,
-                traindate: newTraindate
-        });
+        const response = await graphqlQuery(`mutation {
+            createTicket(input: {
+                code: "${newCode}",
+                trainnumber: ${newTrainnumber},
+                traindate: "${newTraindate}"
+            }) {
+                _id,
+                code,
+                trainnumber,
+                traindate
+            }
+        }`);
+
+        return response.data.createTicket;
     },
 
     updateTicket: async function(ticketId, newCode) {
-        return await postFetcher(
-            backendServer + "/tickets/" + ticketId,
-            { code: newCode }
-        );
+        const response = await graphqlQuery(`mutation {
+            updateTicket(input: {
+                _id: "${ticketId}",
+                code: "${newCode}"
+            }) {
+                _id,
+                code,
+                trainnumber,
+                traindate
+            }
+        }`);
+
+        return response.data.updateTicket;
     },
 
-    codes: async function() {
-        return await getFetcher(backendServer + "/codes");
-    }
+    getCodes: async function() {
+        const response = await graphqlQuery("{ codes { Code, Level3Description } }");
+
+        return response.data.codes;
+    },
+
+    graphqlQuery: graphqlQuery
 };

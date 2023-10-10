@@ -11,13 +11,12 @@
     const router= useRouter();
     const delayedTrains = ref([]);
 
-    api.delayed().then((result) => {
+    api.getDelayedTrains().then((result) => {
         delayedTrains.value = result;
     });
 
     function ticketHref(train) {
         updateCurrentTrainRef(train)
-        // console.log(currentTrainRef);
         router.push({path: "/ticket/"});
     };
 

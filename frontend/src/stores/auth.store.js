@@ -1,6 +1,6 @@
 import { defineStore } from 'pinia';
 
-const backendServer = import.meta.env.VITE_BACKEND;
+import api from '../models/ApiModel';
 
 export const useAuthStore = defineStore({
     id: 'auth',
@@ -11,43 +11,49 @@ export const useAuthStore = defineStore({
     }),
     actions: {
         async login(username, password) {
-            const data = await fetch(backendServer + "/auth/login", {
-                body: JSON.stringify({ username, password }),
-                headers: {
-                    'content-type': 'application/json'
-                },
-                method: 'POST'
-            })
-                .then((response) => response.json())
-                .then((result) => {
-                    return result.data;
-            });
+            const login = await api.graphqlQuery(`{
+                authLogin(input: {
+                    username: "${username}",
+                    password: "${password}"
+                }) {
+                    token,
+                    username,
+                    userid,
+                    success,
+                    message
+                }
+            }`);
 
-            this.token = data.token;
-            this.username = data.username;
-            this.userid = data.userid;
+            const auth = login.data.authLogin;
+
+            this.token = auth.token;
+            this.username = auth.username;
+            this.userid = auth.userid;
+
+            return auth;
         },
 
         async register(username, password) {
-            console.log("före")
+            const register = await api.graphqlQuery(`mutation {
+                authRegister(input: {
+                    username: "${username}",
+                    password: "${password}"
+                }) {
+                    token,
+                    username,
+                    userid,
+                    success,
+                    message
+                }
+            }`);
 
-            const data = await fetch(backendServer + "/auth/register", {
-                body: JSON.stringify({ username, password }),
-                headers: {
-                    'content-type': 'application/json'
-                },
-                method: 'POST'
-            })
-                .then((response) => response.json())
-                .then((result) => {
-                    return result.data;
-            });
+            const auth = register.data.authRegister;
 
-            this.token = data.token;
-            this.username = data.username;
-            this.userid = data.userid;
-
-            return data;
+            this.token = auth.token;
+            this.username = auth.username;
+            this.userid = auth.userid;
+            
+            return auth;
         },
 
         logout() {

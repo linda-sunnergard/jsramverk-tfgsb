@@ -15,149 +15,241 @@ const auth = {
      * @param {*} res api response
      * @returns json response
      */
-    registerUser: async function(req, res) {
-        // Make sure there is both a username and a password
-        if (!req.body.username || !req.body.password) {
-            return res.json({
-                data: {
-                    message: "Error: Body parameter username or password missing."
-                }
-            });
-        }
-
+    registerUser: async function(username, password) {
         const db = await database.openDb();
+        let success = false;
+        let message = null;
+        let userid = null;
+        let token = null;
+        let salt = null;
 
         // Check if there are any users with that name in the db
-        const newUser = req.body.username;
-        const readResult = await db.collection('users').find({ username: newUser }).toArray();
+        const readResult = await db.collection('users').find({ username }).toArray();
 
         if (readResult.length > 0) {
-            return res.json({
-                data: {
-                    message: "Error: User with that name already exists."
-                }
-            });
+            message = "Error: User with that name already exists."
+            return { success, message};
         }
 
         // Generate salt
-        bcrypt.genSalt(10, (err, salt) => {
-            if (err) {
-                return res.json({
-                    data: {
-                        message: "Error: Problem generating salt.",
-                        error: err
-                    }
-                });
-            }
-            // Hash password
-            bcrypt.hash(req.body.password, salt, async (err, hash) => {
-                if (err) {
-                    return res.json({
-                        data: {
-                            message: "Error: Problem hashing password.",
-                            error: err
-                        }
-                    });
-                }
-
-                // Prepare document
-                const doc = {
-                    username: newUser,
-                    password: hash
-                }
-
-                // Create user and get the response
-                const insertResult = await db.collection('users').insertOne(doc);
-                // const userid = await db.collection('users').insertOne(doc).getInsertedId();
-
-                // TODO: Check result for errors somehow
-                if (!insertResult.insertedId) {
-                    return res.json({
-                        data: {
-                            message: "Error: Problem inserting document in database."
-                        }
-                    });
-                }
-
-                const payload = {
-                    username: newUser,
-                    userid: insertResult.insertedId
-                }
-                const token = auth.checkoutToken(payload);
-
-                // Return a confirmation. 
-                // TODO: Return json web token at this point as well
-                return res.json({
-                    data: {
-                        message: "User created successfully.",
-                        username: newUser,
-                        token: token
-                    }
-                });
-            });
+        await bcrypt.genSalt().then(async (generatedSalt) => {
+            salt = generatedSalt
         });
-    },
 
-    loginUser: async function(req, res) {
-        console.log("Attempted login");
-        // Make sure there is both a username and a password
-        if (!req.body.username || !req.body.password) {
-            return res.json({
-                data: {
-                    message: "Error: Body parameter username or password missing."
-                }
-            });
+        if (!salt) {
+            return { success, message };
         }
 
+        // Hash password
+        await bcrypt.hash(password, salt).then(async (hash) => {
+            // Prepare document
+            const doc = {
+                username,
+                password: hash
+            }
+
+            // Create user and get the response
+            const insertResult = await db.collection('users').insertOne(doc);
+
+            if (!insertResult.insertedId) {
+                message = "Error: Problem inserting document in database.";
+
+                return;
+            }
+
+            userid = insertResult.insertedId;
+            token = auth.checkoutToken({ username, userid });
+            message = "User created successfully.";
+            success = true;
+
+            return
+        });
+
+        return { success, message, username, userid, token}
+    },
+
+    // registerUser: async function(req, res) {
+    //     // Make sure there is both a username and a password
+    //     if (!req.body.username || !req.body.password) {
+    //         return res.json({
+    //             data: {
+    //                 message: "Error: Body parameter username or password missing."
+    //             }
+    //         });
+    //     }
+
+    //     const db = await database.openDb();
+
+    //     // Check if there are any users with that name in the db
+    //     const newUser = req.body.username;
+    //     const readResult = await db.collection('users').find({ username: newUser }).toArray();
+
+    //     if (readResult.length > 0) {
+    //         return res.json({
+    //             data: {
+    //                 message: "Error: User with that name already exists."
+    //             }
+    //         });
+    //     }
+
+    //     // Generate salt
+    //     bcrypt.genSalt(10, (err, salt) => {
+    //         if (err) {
+    //             return res.json({
+    //                 data: {
+    //                     message: "Error: Problem generating salt.",
+    //                     error: err
+    //                 }
+    //             });
+    //         }
+    //         // Hash password
+    //         bcrypt.hash(req.body.password, salt, async (err, hash) => {
+    //             if (err) {
+    //                 return res.json({
+    //                     data: {
+    //                         message: "Error: Problem hashing password.",
+    //                         error: err
+    //                     }
+    //                 });
+    //             }
+
+    //             // Prepare document
+    //             const doc = {
+    //                 username: newUser,
+    //                 password: hash
+    //             }
+
+    //             // Create user and get the response
+    //             const insertResult = await db.collection('users').insertOne(doc);
+    //             // const userid = await db.collection('users').insertOne(doc).getInsertedId();
+
+    //             // TODO: Check result for errors somehow
+    //             if (!insertResult.insertedId) {
+    //                 return res.json({
+    //                     data: {
+    //                         message: "Error: Problem inserting document in database."
+    //                     }
+    //                 });
+    //             }
+
+    //             const payload = {
+    //                 username: newUser,
+    //                 userid: insertResult.insertedId
+    //             }
+    //             const token = auth.checkoutToken(payload);
+
+    //             // Return a confirmation. 
+    //             // TODO: Return json web token at this point as well
+    //             return res.json({
+    //                 data: {
+    //                     message: "User created successfully.",
+    //                     username: newUser,
+    //                     token: token
+    //                 }
+    //             });
+    //         });
+    //     });
+    // },
+
+    loginUser: async function(username, password) {
+        console.log("Attempted login");
+
         const db = await database.openDb();
+        let success = false;
+        let message = null;
+        let userid = null;
+        let token = null;
 
         // Check if there are any users with that name in the db
-        const newUser = req.body.username;
-        const readResult = await db.collection('users').find({ username: newUser }).toArray();
+        const readResult = await db.collection('users').find({ username }).toArray();
 
+        // console.log(readResult.length)
         if (readResult.length === 0) {
-            return res.json({
-                data: {
-                    message: "Error: No user with that name exists."
-                }
-            });
+            message = "Error: No user with that name exists.";
+            return { success, message, username };
         }
 
         // console.log(readResult);
         const hash = readResult[0].password;
-        const userid = readResult[0]._id;
+        userid = readResult[0]._id;
 
-        bcrypt.compare(req.body.password, hash, (err, compareResult) => {
-            if (err) {
-                return res.json({
-                    data: {
-                        message: "Error: Problem comparing password with hash."
-                    }
-                });
-            } else if (compareResult) {
-                const payload = {
-                    username: newUser,
-                    userid: userid
-                };
-                const token = auth.checkoutToken(payload);
+        await bcrypt.compare(password, hash).then(async (res) => {
+            if (res) {
+                const payload = { username, userid };
 
-                return res.json({
-                    data: {
-                        message: "Login successful.",
-                        username: newUser,
-                        token: token
-                    }
-                });
+                success = true;
+                message = "Login successful.";
+                token = auth.checkoutToken(payload);
+
+                return;
             }
-            return res.json({
-                data: {
-                    message: "Error: Wrong password."
-                }
-            });
+
+            message = "Error: Wrong password."
         });
 
-        return;
+        return { success, message, username, userid, token };
     },
+
+    // loginUser: async function(req, res) {
+    //     console.log("Attempted login");
+    //     // Make sure there is both a username and a password
+    //     if (!req.body.username || !req.body.password) {
+    //         return res.json({
+    //             data: {
+    //                 message: "Error: Body parameter username or password missing."
+    //             }
+    //         });
+    //     }
+
+    //     const db = await database.openDb();
+
+    //     // Check if there are any users with that name in the db
+    //     const newUser = req.body.username;
+    //     const readResult = await db.collection('users').find({ username: newUser }).toArray();
+
+    //     if (readResult.length === 0) {
+    //         return res.json({
+    //             data: {
+    //                 message: "Error: No user with that name exists."
+    //             }
+    //         });
+    //     }
+
+    //     // console.log(readResult);
+    //     const hash = readResult[0].password;
+    //     const userid = readResult[0]._id;
+
+    //     bcrypt.compare(req.body.password, hash, (err, compareResult) => {
+    //         if (err) {
+    //             return res.json({
+    //                 data: {
+    //                     message: "Error: Problem comparing password with hash."
+    //                 }
+    //             });
+    //         } else if (compareResult) {
+    //             const payload = {
+    //                 username: newUser,
+    //                 userid: userid
+    //             };
+    //             const token = auth.checkoutToken(payload);
+
+    //             return res.json({
+    //                 data: {
+    //                     message: "Login successful.",
+    //                     username: newUser,
+    //                     token: token
+    //                 }
+    //             });
+    //         }
+    //         return res.json({
+    //             data: {
+    //                 message: "Error: Wrong password."
+    //             }
+    //         });
+    //     });
+
+    //     return;
+    // },
 
     checkoutToken: function(payload) {
         const secret = process.env.JWT_SECRET;
@@ -182,8 +274,8 @@ const auth = {
         });
 
         return {
-            success: success,
-            payload: payload
+            success,
+            payload
         };
     },
 

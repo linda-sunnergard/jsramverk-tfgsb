@@ -8,9 +8,7 @@ const tickets = {
 
         // await db.client.close();
         // console.log(allTickets);
-        return res.json({
-            data: allTickets
-        });
+        return allTickets;
     },
 
     // getTicket: async function getTicket(req, res){
@@ -25,41 +23,37 @@ const tickets = {
     //     });
     // },
 
-    createTicket: async function createTicket(req, res){
+    createTicket: async function createTicket(code, trainnumber, traindate) {
         const db = await database.openDb();
 
         const doc = {
-            code: req.body.code,
-            trainnumber: req.body.trainnumber,
-            traindate: req.body.traindate
+            code,
+            trainnumber,
+            traindate
         };
 
         const result = await db.collection('tickets').insertOne(doc);
 
         // console.log(result.insertedId)
-        return res.json({
-            data: {
-                id: result.insertedId,
-                code: req.body.code,
-                trainnumber: req.body.trainnumber,
-                traindate: req.body.traindate,
-            }
-        });
+        return {
+                _id: result.insertedId,
+                code,
+                trainnumber,
+                traindate,
+        }
     },
 
-    updateTicket: async function updateTicket(req, res){
+    updateTicket: async function updateTicket(ticketId, newCode){
         const db = await database.openDb();
-        console.log("attempting to update ticket: " + req.params.ticketId)
+        console.log("attempting to update ticket: " + ticketId)
         const result = await db.collection('tickets').updateOne(
-            { _id : new ObjectId(req.params.ticketId) },
+            { _id : new ObjectId(ticketId) },
             { $set : {
-                code: req.body.code,
+                code: newCode,
             }}
         );
 
-        return res.json({
-            result: result
-        });
+        return result
     }
 };
 

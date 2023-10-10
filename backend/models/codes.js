@@ -23,9 +23,10 @@ const codes = {
             ).then(function(response) {
                 return response.json()
             }).then(function(result) {
-                return res.json({
-                    data: result.RESPONSE.RESULT[0].ReasonCode
-                });
+                // return res.json({
+                //     data: result.RESPONSE.RESULT[0].ReasonCode
+                // });
+                return result.RESPONSE.RESULT[0].ReasonCode;
             })
     }
 };
