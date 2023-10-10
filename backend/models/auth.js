@@ -133,24 +133,7 @@ const auth = {
             success,
             payload
         };
-    },
-
-    // verify: function(req, res, next) {
-    //     const token = req.headers['x-access-token'];
-    //     const result = auth.verifyToken(token);
-
-    //     if (result.success) {
-    //         next();
-    //         return;
-    //     }
-        
-    //     return res.json({
-    //         data: {
-    //             message: "Error: No valid login token.",
-    //             failedVerification: true
-    //         }
-    //     });
-    // }
+    }
 };
 
 module.exports = auth;

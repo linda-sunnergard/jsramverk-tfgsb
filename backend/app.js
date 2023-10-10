@@ -4,25 +4,9 @@ const express = require('express')
 const cors = require('cors')
 const morgan = require('morgan')
 const bodyParser = require('body-parser')
-const { GraphQLSchema } = require("graphql");
-const graphqlHttp = require('graphql-http/lib/use/express');
 
+const graphqlHandler = require('./models/graphql.js');
 const fetchTrainPositions = require('./models/trains.js');
-
-const RootQueryType = require("./graphql/rootQuery.js");
-const RootMutationType = require('./graphql/rootMutation.js')
-const schema = new GraphQLSchema({ 
-    query: RootQueryType,
-    mutation: RootMutationType
-});
-const graphqlHandler = graphqlHttp.createHandler({
-        schema,
-        context: async (req) => {
-            return { token: req.headers["x-access-token"] };
-        }
-});
-
-const auth = require('./routes/auth.js');
 
 const app = express()
 const httpServer = require("http").createServer(app);
