@@ -11,20 +11,7 @@ export const useAuthStore = defineStore({
     }),
     actions: {
         async login(username, password) {
-            const login = await api.graphqlQuery(`{
-                authLogin(input: {
-                    username: "${username}",
-                    password: "${password}"
-                }) {
-                    token,
-                    username,
-                    userid,
-                    success,
-                    message
-                }
-            }`);
-
-            const auth = login.data.authLogin;
+            const auth = await api.login(username, password);
 
             this.token = auth.token;
             this.username = auth.username;
@@ -34,25 +21,12 @@ export const useAuthStore = defineStore({
         },
 
         async register(username, password) {
-            const register = await api.graphqlQuery(`mutation {
-                authRegister(input: {
-                    username: "${username}",
-                    password: "${password}"
-                }) {
-                    token,
-                    username,
-                    userid,
-                    success,
-                    message
-                }
-            }`);
-
-            const auth = register.data.authRegister;
+            const auth = await api.register(username, password)
 
             this.token = auth.token;
             this.username = auth.username;
             this.userid = auth.userid;
-            
+
             return auth;
         },
 
