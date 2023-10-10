@@ -5,9 +5,9 @@ async function fetchTrainPositions(io) {
 
 
     const query = `<REQUEST>
-    <LOGIN authenticationkey="${process.env.TRAFIKVERKET_API_KEY}" />
-    <QUERY sseurl="true" namespace="järnväg.trafikinfo" objecttype="TrainPosition" schemaversion="1.0" limit="1" />
-</REQUEST>`
+        <LOGIN authenticationkey="${process.env.TRAFIKVERKET_API_KEY}" />
+        <QUERY sseurl="true" namespace="järnväg.trafikinfo" objecttype="TrainPosition" schemaversion="1.0" limit="1" />
+    </REQUEST>`
 
     const trainPositions = {};
 
@@ -33,7 +33,7 @@ async function fetchTrainPositions(io) {
     }
 
     io.on('connection', (socket) => {
-        console.log('a user connected')
+        console.log('A user connected')
 
         eventSource.onmessage = function (e) {
             try {
@@ -73,7 +73,7 @@ async function fetchTrainPositions(io) {
     
     io.on('close', async () => {
         try {
-            console.log("closing connection");
+            console.log("Closing connection");
             await eventSource.close();
         } catch (e) {
             console.log(e);
