@@ -5,7 +5,7 @@ const backendServer = import.meta.env.VITE_BACKEND;
 export default {
     graphqlQuery: async function (query) {
         const authStore = useAuthStore();
-    
+
         return fetch(backendServer + "/graphql", {
             body: JSON.stringify({query: query}),
             headers: {
