@@ -7,6 +7,7 @@ const bodyParser = require('body-parser')
 
 const graphqlHandler = require('./models/graphql.js');
 const fetchTrainPositions = require('./models/trains.js');
+const authModel = require('./models/auth.js')
 
 const app = express()
 const httpServer = require("http").createServer(app);
@@ -34,6 +35,18 @@ const io = require("socket.io")(httpServer, {
 });
 
 const port = process.env.PORT || 1337;
+
+app.use((res, req, next) => {
+    const graphqlQuery = req.req.body.query.replaceAll(/\s/g,"");
+
+    if (graphqlQuery.startsWith("{auth") || authModel.verifyRequest(req.req)) {
+        return next();
+    }
+
+    return res.res.json({
+        message: "Invalid authentication token."
+    });
+});
 
 // GraphQL endpoint
 app.use("/graphql", graphqlHandler);

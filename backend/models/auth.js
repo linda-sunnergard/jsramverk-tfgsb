@@ -133,6 +133,17 @@ const auth = {
             success,
             payload
         };
+    },
+
+    verifyRequest: function(req) {
+        const token = req.headers['x-access-token'];
+        const result = auth.verifyToken(token);
+
+        if (result.success) {
+            return true;
+        }
+
+        return false;
     }
 };
 

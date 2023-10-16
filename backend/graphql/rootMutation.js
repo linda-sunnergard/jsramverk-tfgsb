@@ -25,15 +25,11 @@ const RootMutationType = new GraphQLObjectType({
                 input: { type: TicketInput }
             },
             resolve: async (_, args, context) => {
-                const verified = auth.verifyToken(context.token);
-
-                if (verified.success) {
-                    return await tickets.createTicket(
-                        args.input.code,
-                        args.input.trainnumber,
-                        args.input.traindate
-                    );
-                }
+                return await tickets.createTicket(
+                    args.input.code,
+                    args.input.trainnumber,
+                    args.input.traindate
+                );
             }
         },
         updateTicket: {
@@ -43,14 +39,10 @@ const RootMutationType = new GraphQLObjectType({
                 input: { type: TicketInput }
             },
             resolve: async (_, args, context) => {
-                const verified = auth.verifyToken(context.token);
-
-                if (verified.success) {
-                    return await tickets.updateTicket(
-                        args.input._id,
-                        args.input.code
-                    );
-                }
+                return await tickets.updateTicket(
+                    args.input._id,
+                    args.input.code
+                );
             }
         },
         authRegister: {

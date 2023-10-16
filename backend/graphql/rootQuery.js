@@ -25,33 +25,21 @@ const RootQueryType = new GraphQLObjectType({
             type: new GraphQLList(CodeType),
             description: 'List of all ticket codes',
             resolve: async (_, __, context) => {
-                const verified = auth.verifyToken(context.token);
-
-                if (verified.success) {
-                    return await codes.getCodes();
-                }
+                return await codes.getCodes();
             }
         },
         delayed: {
             type: new GraphQLList(DelayedType),
             description: 'List of all delayed trains',
             resolve: async (_, __, context) => {
-                const verified = auth.verifyToken(context.token);
-
-                if (verified.success) {
-                    return await delayed.getDelayedTrains();
-                }
+                return await delayed.getDelayedTrains();
             }
         },
         tickets: {
             type: new GraphQLList(TicketType),
             description: 'List of all tickets',
             resolve: async (_, __, context) => {
-                const verified = auth.verifyToken(context.token);
-
-                if (verified.success) {
-                    return await tickets.getTickets();
-                }
+                return await tickets.getTickets();
             }
         },
         authLogin: {
@@ -70,21 +58,5 @@ const RootQueryType = new GraphQLObjectType({
         }
     })
 });
-
-async function getPeople(entity) {
-    let courseArray = await courses.getAll();
-    let people = [];
-    let acronyms = [];
-    courseArray.forEach(function(course) {
-        course[entity].forEach(function(person) {
-            if (acronyms.indexOf(person.acronym) === -1) {
-                people.push(person);
-                acronyms.push(person.acronym);
-            }
-        });
-    });
-
-    return people;
-}
 
 module.exports = RootQueryType;
