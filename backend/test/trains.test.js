@@ -30,16 +30,6 @@ test("A test", async () => {
     }
   });
 
-  //   new MockEvent({
-  //   url: 'http://faketrains:2000/positions',
-  //   setInterval: [100, 200],
-  //   responses: [
-  //       { data1: "trains" },
-  //       { data2: "more trains" }
-  //     ]
-  // });
-
-
   const io = new WS("ws://localhost:9000");
   const client = new WebSocket("ws://localhost:9000");
   const messages = [];

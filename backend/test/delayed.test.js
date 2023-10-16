@@ -75,15 +75,4 @@ test ('Get Delayed Trains', async () => {
     expect(fetch.mock.calls.length).toEqual(1);
 
     expect(response[0].ActivityId).toBe("1500adde-095d-334b-08db-bd60fb77a372");
-
-    
-    // database.openDb.mockResolvedValue(dbConnection);
-
-    // const result = await tickets.getTickets();
-
-    // expect(database.openDb).toHaveBeenCalledTimes(1);
-    // expect(dbConnection.collection).toHaveBeenCalledTimes(1);
-    // expect(collectionResponse.find).toHaveBeenCalledTimes(1);
-    // expect(result).toEqual(['allTickets']);
-
 });
