@@ -24,6 +24,17 @@ provide('currentTrainRef', {
   updateCurrentTrainRef
 })
 
+const changeMap = ref(false);
+
+function updateChangeMap(newFlag) {
+  changeMap.value = newFlag
+}
+
+provide('changeMap', {
+  changeMap,
+  updateChangeMap
+})
+
 </script>
 
 <template>

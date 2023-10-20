@@ -46,11 +46,6 @@ export default {
         return await getFetcher(backendServer + "/tickets");
     },
 
-    // not implemented on backend
-    // getTicket: async function(ticketId) {
-    //     return await getFetcher(backendServer + "/tickets/" + ticketId);
-    // },
-
     postTicket: async function(newCode, newTrainnumber, newTraindate) {
         return await postFetcher(
             backendServer + "/tickets",
