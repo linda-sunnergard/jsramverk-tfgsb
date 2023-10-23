@@ -16,8 +16,19 @@
     const {changeMap, updateChangeMap} = inject('changeMap');
     let mapMessage = ref("Se endast försenade tåg");
 
-    api.getDelayedTrains().then((result) => {
-        delayedTrains.value = result;
+    // api.getDelayedTrains().then((result) => {
+    //     delayedTrains.value = result;
+    // });
+
+    socketIo.emit('delayedRequest')
+
+    socketIo.on('delayedUpdate', (payload) => {
+        delayedTrains.value = payload.filter((train) => {
+            if (train.Held === "" || train.Held === socketIo.id) {
+                return true
+            }
+            return false
+        })
     });
 
     function ticketHref(train) {

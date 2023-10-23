@@ -28,8 +28,16 @@ export default {
                 ActivityId,
                 OperationalTrainNumber,
                 LocationSignature,
-                FromLocation,
-                ToLocation,
+                FromLocation {
+                    LocationName,
+                    Priority,
+                    Order
+                },
+                ToLocation{
+                    LocationName,
+                    Priority,
+                    Order
+                },
                 AdvertisedTimeAtLocation,
                 EstimatedTimeAtLocation
             }

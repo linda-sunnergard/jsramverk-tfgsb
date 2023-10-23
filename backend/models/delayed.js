@@ -1,3 +1,5 @@
+const fetch = require('node-fetch')
+
 const delayed = {
     getDelayedTrains: async function() {
         const query = `<REQUEST>
@@ -9,7 +11,7 @@ const delayed = {
                     <GT name="EstimatedTimeAtLocation" value="$now" />
                     <AND>
                         <GT name='AdvertisedTimeAtLocation' value='$dateadd(-00:15:00)' />
-                        <LT name='AdvertisedTimeAtLocation'                   value='$dateadd(02:00:00)' />
+                        <LT name='AdvertisedTimeAtLocation' value='$dateadd(02:00:00)' />
                     </AND>
                 </AND>
                 </FILTER>
@@ -32,7 +34,7 @@ const delayed = {
             "https://api.trafikinfo.trafikverket.se/v2/data.json", {
                 method: "POST",
                 body: query,
-                headers: { "Content-Type": "text/xml" }
+                headers: { "Content-Type": "application/xml" }
             }
         ).then(function(response) {
             return response.json();

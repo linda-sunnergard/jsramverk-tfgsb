@@ -17,7 +17,7 @@ const codes = {
             "https://api.trafikinfo.trafikverket.se/v2/data.json", {
                 method: "POST",
                 body: query,
-                headers: { "Content-Type": "text/xml" }
+                headers: { "Content-Type": "application/xml" }
             }
         ).then(function(response) {
             return response.json()

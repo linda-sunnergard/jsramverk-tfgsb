@@ -6,6 +6,7 @@ const {
     GraphQLFloat,
     GraphQLNonNull
 } = require('graphql');
+const LocationType = require('./location.js');
 
 const DelayedType = new GraphQLObjectType({
     name: 'Delayed',
@@ -18,8 +19,8 @@ const DelayedType = new GraphQLObjectType({
         AdvertisedTrainIdent: { type: GraphQLString },
         OperationalTrainNumber: { type: GraphQLString },
         Canceled: { type: GraphQLString },
-        FromLocation: { type: GraphQLString },
-        ToLocation: { type: GraphQLString },
+        FromLocation: { type: new GraphQLList(LocationType) },
+        ToLocation: { type: new GraphQLList(LocationType) },
         LocationSignature: { type: GraphQLString },
         TimeAtLocation: { type: GraphQLString },
         TrainOwner: { type: GraphQLString }
