@@ -1,5 +1,7 @@
+const fetch = require('node-fetch')
+
 const delayed = {
-    getDelayedTrains: async function() {
+    getDelayedTrains: async function(req, res) {
         const query = `<REQUEST>
             <LOGIN authenticationkey="${process.env.TRAFIKVERKET_API_KEY}" />
             <QUERY objecttype="TrainAnnouncement" orderby='AdvertisedTimeAtLocation' schemaversion="1.8">
@@ -9,7 +11,7 @@ const delayed = {
                     <GT name="EstimatedTimeAtLocation" value="$now" />
                     <AND>
                         <GT name='AdvertisedTimeAtLocation' value='$dateadd(-00:15:00)' />
-                        <LT name='AdvertisedTimeAtLocation'                   value='$dateadd(02:00:00)' />
+                        <LT name='AdvertisedTimeAtLocation' value='$dateadd(02:00:00)' />
                     </AND>
                 </AND>
                 </FILTER>
@@ -35,9 +37,12 @@ const delayed = {
                 headers: { "Content-Type": "text/xml" }
             }
         ).then(function(response) {
+            console.log("i response: ", response)
             return response.json();
         }).then(function(result) {
-            return result.RESPONSE.RESULT[0].TrainAnnouncement;
+            return res.json({
+                data: result.RESPONSE.RESULT[0].TrainAnnouncement
+            });
         })
     },
 

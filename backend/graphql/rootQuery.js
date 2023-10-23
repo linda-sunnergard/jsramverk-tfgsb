@@ -32,6 +32,7 @@ const RootQueryType = new GraphQLObjectType({
             type: new GraphQLList(DelayedType),
             description: 'List of all delayed trains',
             resolve: async (_, __, context) => {
+                console.log("i graphql")
                 return await delayed.getDelayedTrains();
             }
         },

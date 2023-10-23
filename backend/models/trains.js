@@ -1,7 +1,5 @@
 const fetch = require('node-fetch')
-<<<<<<< HEAD
-const { initiateEventSource, hookEventSource } = require('./trainsSocket.js')
-=======
+
 const EventSource = require('eventsource');
 const delayed = require('./delayed');
 
@@ -35,22 +33,14 @@ async function isTrainDelayed(trainNumber) {
 }
 
 async function fetchTrainPositions(io) {
-
->>>>>>> 80e978b8fcf7abab3f27ec183588c5c5b919d119
-
-async function subscribeTrainPositions(io) {
     const query = `<REQUEST>
         <LOGIN authenticationkey="${process.env.TRAFIKVERKET_API_KEY}" />
         <QUERY sseurl="true" namespace="järnväg.trafikinfo" objecttype="TrainPosition" schemaversion="1.0" limit="1" />
     </REQUEST>`
-<<<<<<< HEAD
-    const trainPositions = [];
-=======
+
 
     const trainPositions = {};
     let fileredTrainIds = [];
-
->>>>>>> 80e978b8fcf7abab3f27ec183588c5c5b919d119
     const response = await fetch(
         "https://api.trafikinfo.trafikverket.se/v2/data.json", {
             method: "POST",
@@ -60,13 +50,9 @@ async function subscribeTrainPositions(io) {
     )
     const result = await response.json()
     const sseurl = result.RESPONSE.RESULT[0].INFO.SSEURL
-    const eventSource = initiateEventSource(sseurl)
+    const eventSource = new EventSource(sseurl)
 
     io.on('connection', (socket) => {
-<<<<<<< HEAD
-        console.log("User", socket.id, "subscribed to train positions.")
-        hookEventSource(eventSource, socket, trainPositions)
-=======
         console.log('A user connected')
 
         eventSource.onmessage = async function (e) {
@@ -103,7 +89,6 @@ async function subscribeTrainPositions(io) {
 
             return
         }
->>>>>>> 80e978b8fcf7abab3f27ec183588c5c5b919d119
     })
 
     io.on('close', async () => {
@@ -115,17 +100,13 @@ async function subscribeTrainPositions(io) {
         }
         return
     })
-<<<<<<< HEAD
-=======
-    
+
     io.on('message', async (e) => {
         const parsedData = JSON.parse(e.data);
         fileredTrainIds = parsedData
         console.log("apply filter")
         console.log(fileredTrainIds)
     })
-    
->>>>>>> 80e978b8fcf7abab3f27ec183588c5c5b919d119
 }
 
-module.exports = subscribeTrainPositions;
+module.exports = fetchTrainPositions;

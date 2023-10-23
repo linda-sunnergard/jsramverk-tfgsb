@@ -17,6 +17,7 @@
     let mapMessage = ref("Se endast försenade tåg");
 
     api.getDelayedTrains().then((result) => {
+        console.log(result)
         delayedTrains.value = result;
     });
 

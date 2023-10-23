@@ -1,15 +1,9 @@
 <script setup>
 import 'leaflet/dist/leaflet.css';
-<<<<<<< HEAD
-import L from "leaflet";
-import { onMounted, ref, inject } from 'vue';
-
-=======
 import L, { marker } from "leaflet";
 import { onMounted, ref, inject, watch } from 'vue';
 
 const socket = inject('socket').value;
->>>>>>> 80e978b8fcf7abab3f27ec183588c5c5b919d119
 const zoom = ref(5);
 const {changeMap, updateChangeMap} = inject('changeMap');
 
@@ -39,10 +33,6 @@ const delayedIcon = L.divIcon({
 let markers = {};
 
 onMounted(() => {
-<<<<<<< HEAD
-    const socket = inject('socketIo');
-=======
->>>>>>> 80e978b8fcf7abab3f27ec183588c5c5b919d119
     const map = L.map('map').setView([62.173276, 14.942265], 5);
 
     L.tileLayer('https://tile.openstreetmap.org/{z}/{x}/{y}.png', {
@@ -50,15 +40,11 @@ onMounted(() => {
             attribution: '&copy; <a href="http://www.openstreetmap.org/copyright">OpenStreetMap</a>'
         }).addTo(map);
 
-<<<<<<< HEAD
         let markers = {};
 
-        socket.on("mapUpdate", (data) => {
-=======
     socket.on("message", (data) => {
         let icon = data.delayed ? delayedIcon : standardIcon
         if (changeMap.value == false || data.delayed == true) {
->>>>>>> 80e978b8fcf7abab3f27ec183588c5c5b919d119
             if (markers.hasOwnProperty(data.trainnumber)) {
                 let marker = markers[data.trainnumber]
 
