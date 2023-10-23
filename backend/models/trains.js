@@ -1,5 +1,4 @@
 const fetch = require('node-fetch')
-
 const EventSource = require('eventsource');
 const delayed = require('./delayed.js');
 
@@ -37,10 +36,8 @@ async function fetchTrainPositions(io) {
         <LOGIN authenticationkey="${process.env.TRAFIKVERKET_API_KEY}" />
         <QUERY sseurl="true" namespace="järnväg.trafikinfo" objecttype="TrainPosition" schemaversion="1.0" limit="1" />
     </REQUEST>`
-
     const trainPositions = {};
     let fileredTrainIds = [];
-
     const response = await fetch(
         "https://api.trafikinfo.trafikverket.se/v2/data.json", {
             method: "POST",
@@ -51,7 +48,7 @@ async function fetchTrainPositions(io) {
     const result = await response.json()
     const sseurl = result.RESPONSE.RESULT[0].INFO.SSEURL
     const eventSource = new EventSource(sseurl)
-    // console.log('aoeaoe')
+
     io.on('connection', (socket) => {
         console.log('A user connected')
         eventSource.onmessage = async function (e) {
@@ -108,4 +105,5 @@ async function fetchTrainPositions(io) {
     })
 }
 
-module.exports = fetchTrainPositions
+
+module.exports = fetchTrainPositions;

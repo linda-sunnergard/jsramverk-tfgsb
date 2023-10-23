@@ -1,7 +1,8 @@
-const fetch = require('node-fetch')
+
+const fetch = require('node-fetch');
 
 const delayed = {
-    getDelayedTrains: async function() {
+    getDelayedTrains: async function(req, res) {
         const query = `<REQUEST>
             <LOGIN authenticationkey="${process.env.TRAFIKVERKET_API_KEY}" />
             <QUERY objecttype="TrainAnnouncement" orderby='AdvertisedTimeAtLocation' schemaversion="1.8">
@@ -58,9 +59,9 @@ const delayed = {
     },
 
     emitUpdate: async function(socketOrIo, socketId) {
-        const allDelayed = await delayed.getDelayedTrains()
+        const allDelayed = await delayed.getDelayedTrains();
 
-        socketOrIo.emit('delayedUpdate', this.filterHeld(allDelayed, socketId))
+        socketOrIo.emit('delayedUpdate', this.filterHeld(allDelayed, socketId));
     },
 
     subscribeDelayedTrains: async function(io) {

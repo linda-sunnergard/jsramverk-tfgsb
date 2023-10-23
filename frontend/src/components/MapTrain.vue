@@ -1,12 +1,11 @@
 <script setup>
 import 'leaflet/dist/leaflet.css';
-
 import L, { marker } from "leaflet";
 import { onMounted, ref, inject, watch } from 'vue';
 
+const socket = inject('socket').value;
 const zoom = ref(5);
 const {changeMap, updateChangeMap} = inject('changeMap');
-const socket = inject('socketIo');
 
 const mapIcon = L.icon({
     iconUrl: 'https://unpkg.com/leaflet@1.9.4/dist/images/marker-icon.png',
@@ -34,13 +33,13 @@ const delayedIcon = L.divIcon({
 let markers = {};
 
 onMounted(() => {
-    const socket = inject('socketIo');
     const map = L.map('map').setView([62.173276, 14.942265], 5);
 
     L.tileLayer('https://tile.openstreetmap.org/{z}/{x}/{y}.png', {
             maxZoom: 19,
             attribution: '&copy; <a href="http://www.openstreetmap.org/copyright">OpenStreetMap</a>'
         }).addTo(map);
+
 
     let markers = {};
 

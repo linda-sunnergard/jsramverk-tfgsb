@@ -15,9 +15,9 @@ export default {
             },
             method: 'POST'
         })
-            .then((response) => response.json())
+            .then((response) =>  response.json())
             .then((result) => {
-                // console.log(result.data);
+                console.log("i result i frontend: ", result);
                 return result;
             });
     },
@@ -42,6 +42,8 @@ export default {
                 EstimatedTimeAtLocation
             }
         }`);
+
+        console.log(response)
 
         return response.data.delayed;
     },
