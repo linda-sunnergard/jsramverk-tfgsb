@@ -5,14 +5,9 @@ const cors = require('cors')
 const morgan = require('morgan')
 const bodyParser = require('body-parser')
 
-const fetchTrainPositions = require('./models/trains.js')
-const authModel = require('./models/auth.js');
-
-const delayed = require('./routes/delayed.js');
-const tickets = require('./routes/tickets.js');
-const codes = require('./routes/codes.js');
-const auth = require('./routes/auth.js');
-
+const graphqlHandler = require('./models/graphql.js');
+const fetchTrainPositions = require('./models/trains.js');
+const authModel = require('./models/auth.js')
 
 const app = express()
 const httpServer = require("http").createServer(app);
@@ -29,38 +24,32 @@ app.use(bodyParser.urlencoded({ extended: true }));
 let ioOrigin = "https://www.student.bth.se";
 
 if (process.env.NODE_ENV == "development") {
-  ioOrigin = "http://localhost:5173";
+    ioOrigin = "http://localhost:5173";
 }
 
 const io = require("socket.io")(httpServer, {
-  cors: {
-    origin: ioOrigin,
-    methods: ["GET", "POST"]
-  }
+    cors: {
+        origin: ioOrigin,
+        methods: ["GET", "POST"]
+    }
 });
 
 const port = process.env.PORT || 1337;
 
-app.get('/', (req, res) => {
-  res.json({
-      data: 'Hello World!'
-  })
-})
+app.use((res, req, next) => {
+    const graphqlQuery = req.req.body.query.replaceAll(/\s/g,"");
 
-app.get('/mode', (req, res) => {
-  res.json({
-      data: process.env.NODE_ENV
-  })
-})
+    if (graphqlQuery.startsWith("{auth") || authModel.verifyRequest(req.req)) {
+        return next();
+    }
 
-app.use("/auth", auth);
+    return res.res.json({
+        message: "Invalid authentication token."
+    });
+});
 
-// Require token verification middleware for all remaining routes
-app.use(authModel.verify);
-
-app.use("/delayed", delayed);
-app.use("/tickets", tickets);
-app.use("/codes", codes);
+// GraphQL endpoint
+app.use("/graphql", graphqlHandler);
 
 httpServer.listen(port, () => {
   console.log(`Example app listening on port ${port}`)
@@ -69,5 +58,5 @@ httpServer.listen(port, () => {
 fetchTrainPositions(io);
 
 process.on('exit', () => {
-  io.disconnect();
+    io.disconnect();
 });

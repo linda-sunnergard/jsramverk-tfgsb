@@ -1,7 +1,7 @@
-const fetch = require('node-fetch')
+// const fetch = require('node-fetch')
 
 const delayed = {
-    getDelayedTrains: async function getDelayedTrains(req, res) {
+    getDelayedTrains: async function() {
         const query = `<REQUEST>
                   <LOGIN authenticationkey="${process.env.TRAFIKVERKET_API_KEY}" />
                   <QUERY objecttype="TrainAnnouncement" orderby='AdvertisedTimeAtLocation' schemaversion="1.8">
@@ -30,7 +30,6 @@ const delayed = {
                   </QUERY>
             </REQUEST>`;
 
-
             return fetch(
                 "https://api.trafikinfo.trafikverket.se/v2/data.json", {
                     method: "POST",
@@ -40,9 +39,7 @@ const delayed = {
             ).then(function(response) {
                 return response.json()
             }).then(function(result) {
-                return res.json({
-                    data: result.RESPONSE.RESULT[0].TrainAnnouncement
-                });
+                return result.RESPONSE.RESULT[0].TrainAnnouncement;
             })
     }
 };

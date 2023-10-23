@@ -11,10 +11,11 @@
     const {currentTrainRef, updateCurrentTrainRef} = inject('currentTrainRef');
     const router= useRouter();
     const delayedTrains = ref([]);
+
     const {changeMap, updateChangeMap} = inject('changeMap');
     let mapMessage = ref("Se endast försenade tåg");
-    
-    api.delayed().then((result) => {
+
+    api.getDelayedTrains().then((result) => {
         delayedTrains.value = result;
     });
 

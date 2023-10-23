@@ -10,7 +10,7 @@
     let selected;
     const {currentTicket, updateCurrentTicket} = inject('currentTicket');
 
-    api.codes().then((result) => { codes.value = result });
+    api.getCodes().then((result) => { codes.value = result });
 
     function updateTicket (selected, currentTicket) {
         if (selected === undefined) {
@@ -22,11 +22,6 @@
         updateCurrentTicket(newTicket);
         router.push({name: 'ticket'});;
     };
-
-    function handleBackButton() {
-        router.push({name: 'ticket'});
-    }
-
 </script>
 
 <template>

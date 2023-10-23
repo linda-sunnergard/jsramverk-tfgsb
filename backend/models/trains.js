@@ -64,7 +64,7 @@ async function fetchTrainPositions(io) {
     }
 
     io.on('connection', (socket) => {
-        console.log('a user connected')
+        console.log('A user connected')
 
         eventSource.onmessage = async function (e) {
             try {
@@ -104,7 +104,7 @@ async function fetchTrainPositions(io) {
     
     io.on('close', async () => {
         try {
-            console.log("closing connection");
+            console.log("Closing connection");
             await eventSource.close();
         } catch (e) {
             console.log(e);

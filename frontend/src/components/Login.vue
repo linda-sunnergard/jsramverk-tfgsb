@@ -7,20 +7,18 @@
     const router= useRouter();
     const username = ref("");
     const password = ref("");
+    const message = ref("");
 
-    function submitLogin() {
+    async function submitLogin() {
         const authStore = useAuthStore();
+        const login = await authStore.login(username.value, password.value);
 
-        authStore.login(username.value, password.value)
-            .then(() => {
-                router.push('/home');
-            })
-            .catch(() => {
-                console.error("Error logging in.");
-                router.push('/');
-            });
-
-            // return
+        if (login.success) {
+            router.push('home');
+        } else {
+            console.error("Error logging in");
+            message.value = "Fel vid inloggning."
+        }
     }
 </script>
 
@@ -28,6 +26,8 @@
     <div class="container">
         <div class="login">
             <h1>TrafikLedare</h1>
+
+            <p v-if="message">{{ message }}</p>
 
             <form class="login-form" @submit.prevent="submitLogin">
                 <input type="text" v-model="username" placeholder="Användarnamn" />
