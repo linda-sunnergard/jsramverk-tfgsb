@@ -43,17 +43,7 @@ onMounted(() => {
 
     socket.on("message", (data) => {
         let icon = data.delayed ? delayedIcon : standardIcon
-        if (data.delayed == true) {
-            if (markers.hasOwnProperty(data.trainnumber)) {
-                let marker = markers[data.trainnumber]
-
-                marker.setLatLng(data.position);
-            } else {
-                let marker = L.marker(data.position, {icon: icon}).bindPopup(data.trainnumber).addTo(map);
-
-                markers[data.trainnumber] = marker
-            }
-        } else if (changeMap.value == false)  {
+        if (changeMap.value == false || data.delayed == true) {
             if (markers.hasOwnProperty(data.trainnumber)) {
                 let marker = markers[data.trainnumber]
 
