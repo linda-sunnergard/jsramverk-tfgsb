@@ -52,11 +52,6 @@ export default {
         return response.data.tickets;
     },
 
-    // not implemented on backend
-    // getTicket: async function(ticketId) {
-    //     return await getFetcher(backendServer + "/tickets/" + ticketId);
-    // },
-
     postTicket: async function(newCode, newTrainnumber, newTraindate) {
         const response = await this.graphqlQuery(`mutation {
             createTicket(input: {

@@ -1,12 +1,15 @@
 <script setup>
 import Trains from '../components/Trains.vue'
 import MapTrain from '../components/MapTrain.vue'
+import { io } from "socket.io-client";
+import { provide, ref } from 'vue';
 
-// import { defineAsyncComponent } from 'vue'
+const socketIo = import.meta.env.VITE_BACKEND;
 
-// const Trains = defineAsyncComponent(() =>
-//     import('../components/Trains.vue')
-// )
+const socket = ref(io(socketIo));
+
+provide('socket', socket)
+
 </script>
 
 <template>

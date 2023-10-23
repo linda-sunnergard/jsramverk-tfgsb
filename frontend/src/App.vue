@@ -27,7 +27,20 @@ provide('currentTrainRef', {
   updateCurrentTrainRef
 })
 
+<<<<<<< HEAD
 provide('socketIo', io(backendServer))
+=======
+const changeMap = ref(false);
+
+function updateChangeMap(newFlag) {
+  changeMap.value = newFlag
+}
+
+provide('changeMap', {
+  changeMap,
+  updateChangeMap
+})
+>>>>>>> 80e978b8fcf7abab3f27ec183588c5c5b919d119
 
 </script>
 
