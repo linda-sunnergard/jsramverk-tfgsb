@@ -2,9 +2,8 @@
 import { io } from "socket.io-client";
 import 'leaflet/dist/leaflet.css';
 import L from "leaflet";
-import { onMounted, ref } from 'vue';
+import { onMounted, ref, inject } from 'vue';
 
-const socketIo = import.meta.env.VITE_BACKEND;
 const zoom = ref(5);
 
 const mapIcon = L.icon({
@@ -18,9 +17,8 @@ const mapIcon = L.icon({
 });
 
 onMounted(() => {
-    const socket = io(socketIo);
+    const socket = inject('socketIo');
     const map = L.map('map').setView([62.173276, 14.942265], 5);
-
 
     L.tileLayer('https://tile.openstreetmap.org/{z}/{x}/{y}.png', {
             maxZoom: 19,
@@ -29,7 +27,7 @@ onMounted(() => {
 
         let markers = {};
 
-        socket.on("message", (data) => {
+        socket.on("mapUpdate", (data) => {
             if (markers.hasOwnProperty(data.trainnumber)) {
                 let marker = markers[data.trainnumber]
 

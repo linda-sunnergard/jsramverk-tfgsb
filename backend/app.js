@@ -6,7 +6,8 @@ const morgan = require('morgan')
 const bodyParser = require('body-parser')
 
 const graphqlHandler = require('./models/graphql.js');
-const fetchTrainPositions = require('./models/trains.js');
+const subscribeTrainPositions = require('./models/trains.js');
+const delayed = require('./models/delayed.js');
 const authModel = require('./models/auth.js')
 
 const app = express()
@@ -55,7 +56,8 @@ httpServer.listen(port, () => {
   console.log(`Example app listening on port ${port}`)
 })
 
-fetchTrainPositions(io);
+subscribeTrainPositions(io);
+delayed.subscribeDelayedTrains(io);
 
 process.on('exit', () => {
     io.disconnect();

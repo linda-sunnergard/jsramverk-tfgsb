@@ -10,13 +10,21 @@
     const {currentTrainRef, updateCurrentTrainRef} = inject('currentTrainRef');
     const router= useRouter();
     const delayedTrains = ref([]);
+    const socketIo = inject('socketIo');
 
-    api.getDelayedTrains().then((result) => {
-        delayedTrains.value = result;
-    });
+    socketIo.emit('delayedRequest')
+
+    socketIo.on('delayedUpdate', (payload) => {
+        delayedTrains.value = payload.filter((row) => {
+            if (row.Held === "" || row.Held === socketIo.id) {
+                return true
+            }
+        });
+    })
 
     function ticketHref(train) {
-        updateCurrentTrainRef(train)
+        currentTrainRef.value = train
+        socketIo.emit('delayedHold', train)
         router.push({path: "/ticket/"});
     };
 
