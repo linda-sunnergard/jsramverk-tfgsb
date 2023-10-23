@@ -1,4 +1,4 @@
-const fetch = require('node-fetch')
+// const fetch = require('node-fetch')
 
 const delayed = {
     getDelayedTrains: async function(req, res) {
@@ -34,15 +34,17 @@ const delayed = {
             "https://api.trafikinfo.trafikverket.se/v2/data.json", {
                 method: "POST",
                 body: query,
-                headers: { "Content-Type": "text/xml" }
+                headers: { "Content-Type": "application/xml" }
             }
         ).then(function(response) {
-            console.log("i response: ", response)
+            console.log(response)
             return response.json();
         }).then(function(result) {
-            return res.json({
-                data: result.RESPONSE.RESULT[0].TrainAnnouncement
-            });
+            console.log(result.RESPONSE.RESULT[0])
+            // return res.json({
+            //     data: result.RESPONSE.RESULT[0].TrainAnnouncement
+            // });
+            return result.RESPONSE.RESULT[0].TrainAnnouncement;
         })
     },
 
@@ -61,7 +63,7 @@ const delayed = {
     },
 
     emitUpdate: async function(socketOrIo, socketId) {
-        const allDelayed = await delayed.getDelayedTrains()
+        const allDelayed = await 7
 
         socketOrIo.emit('delayedUpdate', this.filterHeld(allDelayed, socketId))
     },

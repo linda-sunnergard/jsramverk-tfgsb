@@ -15,10 +15,7 @@ export default {
             },
             method: 'POST'
         })
-            .then((response) => {
-                console.log("i response i frontend:", response)
-                return response.json()
-            })
+            .then((response) =>  response.json())
             .then((result) => {
                 console.log("i result i frontend: ", result);
                 return result;
@@ -31,8 +28,16 @@ export default {
                 ActivityId,
                 OperationalTrainNumber,
                 LocationSignature,
-                FromLocation,
-                ToLocation,
+                FromLocation {
+                    LocationName,
+                    Priority,
+                    Order
+                },
+                ToLocation{
+                    LocationName,
+                    Priority,
+                    Order
+                },
                 AdvertisedTimeAtLocation,
                 EstimatedTimeAtLocation
             }

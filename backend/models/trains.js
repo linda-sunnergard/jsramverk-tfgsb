@@ -1,7 +1,7 @@
-const fetch = require('node-fetch')
+// const fetch = require('node-fetch')
 
 const EventSource = require('eventsource');
-const delayed = require('./delayed');
+const delayed = require('./delayed.js');
 
 async function isTrainDelayed(trainNumber) {
     const query = `<REQUEST>
@@ -26,7 +26,7 @@ async function isTrainDelayed(trainNumber) {
         "https://api.trafikinfo.trafikverket.se/v2/data.json", {
             method: "POST",
             body: query,
-            headers: { "Content-Type": "text/xml" }
+            headers: { "Content-Type": "application/xml" }
         });
     const trainData = await response.json();
     return trainData.RESPONSE.RESULT[0].TrainAnnouncement.length > 0;
@@ -45,7 +45,7 @@ async function fetchTrainPositions(io) {
         "https://api.trafikinfo.trafikverket.se/v2/data.json", {
             method: "POST",
             body: query,
-            headers: { "Content-Type": "text/xml" }
+            headers: { "Content-Type": "application/xml" }
         }
     )
     const result = await response.json()
