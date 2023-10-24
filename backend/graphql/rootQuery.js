@@ -11,9 +11,10 @@ const DelayedType = require("./delayed.js");
 const TicketType = require("./ticket.js");
 const AuthType = require("./auth.js");
 const AuthInput = require("./authInput.js");
+const DelayedInput = require("./delayedInput.js")
 
 const codes = require("../models/codes.js");
-const delayed = require("../models/delayed.js");
+const delayedModel = require("../models/delayed.js");
 const tickets = require("../models/tickets.js");
 const auth = require("../models/auth.js");
 
@@ -31,8 +32,22 @@ const RootQueryType = new GraphQLObjectType({
         delayed: {
             type: new GraphQLList(DelayedType),
             description: 'List of all delayed trains',
-            resolve: async (_, __, context) => {
-                return await delayed.getDelayedTrains();
+            args: {
+                input: { type: DelayedInput }
+            },
+            resolve: async (_, args, context) => {
+                const delayed = await delayedModel.getDelayedTrains()
+
+                if (args && args.input && args.input.OperationalTrainNumber) {
+                    const input = args.input.OperationalTrainNumber
+                    for (const train of delayed) {
+                        if (train.OperationalTrainNumber === input) {
+                            return [ train ]
+                        }
+                    }
+                }
+
+                return delayed
             }
         },
         tickets: {
