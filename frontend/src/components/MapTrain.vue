@@ -3,34 +3,39 @@ import 'leaflet/dist/leaflet.css';
 import L, { marker } from "leaflet";
 import { onMounted, ref, inject, watch } from 'vue';
 
-const socket = inject('socket').value;
+// const socket = inject('socket').value;
 const zoom = ref(5);
 const {changeMap, updateChangeMap} = inject('changeMap');
+const {currentTrainRef, updateCurrentTrainRef} = inject('currentTrainRef');
 
-const mapIcon = L.icon({
-    iconUrl: 'https://unpkg.com/leaflet@1.9.4/dist/images/marker-icon.png',
-    iconSize: [25, 41],
-    iconAnchor: [10, 41],
-    popupAnchor: [2, -40],
-    shadowUrl: 'https://unpkg.com/leaflet@1.9.4/dist/images/marker-shadow.png',
-    // shadowSize: [68, 95],
-    // shadowAnchor: [22, 94]
-});
+// const mapIcon = L.icon({
+//     iconUrl: 'https://unpkg.com/leaflet@1.9.4/dist/images/marker-icon.png',
+//     iconSize: [25, 41],
+//     iconAnchor: [10, 41],
+//     popupAnchor: [2, -40],
+//     shadowUrl: 'https://unpkg.com/leaflet@1.9.4/dist/images/marker-shadow.png',
+//     // shadowSize: [68, 95],
+//     // shadowAnchor: [22, 94]
+// });
 
-const standardIcon = L.divIcon({
-    html: '<div class="map-marker-standard"></div>',
-    className: 'map-marker',
-    iconSize: [26, 26],
-    iconAnchor: [12, 26],
-})
-const delayedIcon = L.divIcon({
-    html: '<div class="map-marker-delayed"></div>',
-    className: 'map-marker',
-    iconSize: [26, 26],
-    iconAnchor: [12, 26],
-})
+// const standardIcon = L.divIcon({
+//     html: '<div class="map-marker-standard"></div>',
+//     className: 'map-marker',
+//     iconSize: [26, 26],
+//     iconAnchor: [12, 26],
+// })
+// const delayedIcon = L.divIcon({
+//     html: '<div class="map-marker-delayed"></div>',
+//     className: 'map-marker',
+//     iconSize: [26, 26],
+//     iconAnchor: [12, 26],
+// })
 
 let markers = {};
+
+function onMarkerClick(trainNumber) {
+    
+};
 
 onMounted(() => {
     const map = L.map('map').setView([62.173276, 14.942265], 5);
@@ -49,12 +54,13 @@ onMounted(() => {
 
                 marker.setLatLng(data.position);
             } else {
-                let marker = L.marker(data.position, {icon: icon}).bindPopup(data.trainnumber).addTo(map);
+                let marker = L.marker(data.position, {icon: icon}).bindPopup(data.trainnumber).addTo(map).on('click', onMarkerClick(data.trainnumber));
 
                 markers[data.trainnumber] = marker
             }
         }
     });
+
 
     watch(changeMap, () => {
         for (let trainNumber in markers) {
