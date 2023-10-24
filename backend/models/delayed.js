@@ -84,11 +84,13 @@ const delayed = {
                 body: query,
                 headers: { "Content-Type": "application/xml" }
             }
-        ).then(function(response) {
-            return response.json();
-        }).then(function(result) {
-            return result.RESPONSE.RESULT[0].TrainAnnouncement;
-        })
+            ).then(function(response) {
+                return response.json()
+            }).then(function(result) {
+                return res.json({
+                    data: result.RESPONSE.RESULT[0].TrainAnnouncement
+                });
+            })
     },
 
     held: {},
