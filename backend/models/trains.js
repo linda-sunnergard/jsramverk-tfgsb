@@ -1,6 +1,6 @@
 const fetch = require('node-fetch')
 const EventSource = require('eventsource');
-const delayed = require('./delayed');
+const delayed = require('./delayed.js');
 
 async function isTrainDelayed(trainNumber) {
     const query = `<REQUEST>
@@ -25,47 +25,32 @@ async function isTrainDelayed(trainNumber) {
         "https://api.trafikinfo.trafikverket.se/v2/data.json", {
             method: "POST",
             body: query,
-            headers: { "Content-Type": "text/xml" }
+            headers: { "Content-Type": "application/xml" }
         });
     const trainData = await response.json();
     return trainData.RESPONSE.RESULT[0].TrainAnnouncement.length > 0;
 }
 
 async function fetchTrainPositions(io) {
-
-
     const query = `<REQUEST>
         <LOGIN authenticationkey="${process.env.TRAFIKVERKET_API_KEY}" />
         <QUERY sseurl="true" namespace="järnväg.trafikinfo" objecttype="TrainPosition" schemaversion="1.0" limit="1" />
     </REQUEST>`
-
     const trainPositions = {};
     let fileredTrainIds = [];
-
     const response = await fetch(
         "https://api.trafikinfo.trafikverket.se/v2/data.json", {
             method: "POST",
             body: query,
-            headers: { "Content-Type": "text/xml" }
+            headers: { "Content-Type": "application/xml" }
         }
     )
     const result = await response.json()
     const sseurl = result.RESPONSE.RESULT[0].INFO.SSEURL
-
     const eventSource = new EventSource(sseurl)
-    
-    eventSource.onopen = function() {
-        console.log("Connection to server opened.")
-    }
-    
-    eventSource.onerror = function(e) {
-        console.log("EventSource failed.")
-        console.log(e)
-    }
 
     io.on('connection', (socket) => {
-        console.log('a user connected')
-
+        console.log('A user connected')
         eventSource.onmessage = async function (e) {
             try {
                 // console.log(e)
@@ -101,24 +86,24 @@ async function fetchTrainPositions(io) {
             return
         }
     })
-    
+
     io.on('close', async () => {
         try {
-            console.log("closing connection");
+            console.log("Closing connection");
             await eventSource.close();
         } catch (e) {
             console.log(e);
         }
         return
     })
-    
+
     io.on('message', async (e) => {
         const parsedData = JSON.parse(e.data);
         fileredTrainIds = parsedData
         console.log("apply filter")
         console.log(fileredTrainIds)
     })
-    
 }
+
 
 module.exports = fetchTrainPositions;

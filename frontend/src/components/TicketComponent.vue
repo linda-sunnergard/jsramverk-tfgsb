@@ -13,9 +13,10 @@
     const selected = ref({});
     const {currentTicket, updateCurrentTicket} = inject('currentTicket');
     const {currentTrainRef, updateCurrentTrainRef} = inject('currentTrainRef');
+    const socketIo = inject('socketIo')
 
     function updateTrains() {
-        api.delayed().then((result) => {
+        api.getDelayedTrains().then((result) => {
             trains.value = result;
         });
     }
@@ -27,7 +28,7 @@
     }
 
     function updateCodes() {
-        api.codes().then((result) => {
+        api.getCodes().then((result) => {
             codes.value = result;
         });
     }
@@ -44,7 +45,6 @@
         const code = selectedCode;
         const trainNumber = currentTrainRef.value.OperationalTrainNumber;
         const trainDate = currentTrainRef.value.EstimatedTimeAtLocation.substring(0, 10);
-        console.log(code, trainNumber, trainDate);
         api.postTicket(code, trainNumber, trainDate).then(() => {
             updateTickets();
         });
@@ -54,12 +54,17 @@
         updateCurrentTicket(ticket)
         router.push("/update/");
     }
+
+    function goHome() {
+        socketIo.emit('delayedRelease')
+        router.push('/home')
+    }
 </script>
 
 <template>
     <div class="ticket-container">
         <div class="ticket">
-            <RouterLink to="/home">&lt- Tillbaka</RouterLink>
+            <a href="/home" @click.prevent="goHome()">&lt- Tillbaka</a>
             <h1>Nytt ärende #{{ tickets.length + 1 }}</h1>
             <h3 v-if="currentTrainRef.FromLocation">
                 {{ "Tåg från " + currentTrainRef.FromLocation[0].LocationName + " till " + currentTrainRef.ToLocation[0].LocationName + ". Just nu i " + currentTrainRef.LocationSignature + "." }}

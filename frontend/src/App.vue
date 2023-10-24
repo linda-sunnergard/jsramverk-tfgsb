@@ -1,6 +1,9 @@
 <script setup>
 import { RouterLink, RouterView } from 'vue-router'
 import { provide, ref } from 'vue'
+import { io } from 'socket.io-client';
+
+const backendServer = import.meta.env.VITE_BACKEND;
 
 const currentTicket = ref({});
 
@@ -23,6 +26,8 @@ provide('currentTrainRef', {
   currentTrainRef,
   updateCurrentTrainRef
 })
+
+provide('socketIo', io(backendServer))
 
 const changeMap = ref(false);
 

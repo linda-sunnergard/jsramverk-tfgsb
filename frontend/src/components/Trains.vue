@@ -11,15 +11,29 @@
     const {currentTrainRef, updateCurrentTrainRef} = inject('currentTrainRef');
     const router= useRouter();
     const delayedTrains = ref([]);
+    const socketIo = inject('socketIo');
+
     const {changeMap, updateChangeMap} = inject('changeMap');
     let mapMessage = ref("Se endast försenade tåg");
-    
-    api.delayed().then((result) => {
-        delayedTrains.value = result;
-    });
+
+    socketIo.emit('delayedRequest')
+
+    socketIo.on('delayedUpdate', (payload) => {
+        delayedTrains.value = payload.filter((train) => {
+            if (train.Held === "" || train.Held === socketIo.id) {
+                return true
+            }
+            return false
+        })
+    })
+    // api.getDelayedTrains().then((result) => {
+    //     console.log(result)
+    //     delayedTrains.value = result;
+    // });
 
     function ticketHref(train) {
-        updateCurrentTrainRef(train)
+        currentTrainRef.value = train
+        socketIo.emit('delayedHold', train)
         router.push({path: "/ticket/"});
     };
 

@@ -40,11 +40,13 @@ function onMarkerClick(trainNumber) {
 onMounted(() => {
     const map = L.map('map').setView([62.173276, 14.942265], 5);
 
-
     L.tileLayer('https://tile.openstreetmap.org/{z}/{x}/{y}.png', {
             maxZoom: 19,
             attribution: '&copy; <a href="http://www.openstreetmap.org/copyright">OpenStreetMap</a>'
         }).addTo(map);
+
+
+    let markers = {};
 
     socket.on("message", (data) => {
         let icon = data.delayed ? delayedIcon : standardIcon
