@@ -40,7 +40,7 @@ const port = process.env.PORT || 1337;
 app.use((res, req, next) => {
     const graphqlQuery = req.req.body.query.replaceAll(/\s/g,"");
 
-    if (graphqlQuery.startsWith("{auth") || authModel.verifyRequest(req.req)) {
+    if (graphqlQuery.startsWith("mutation{auth") || graphqlQuery.startsWith("{auth") || authModel.verifyRequest(req.req)) {
         return next();
     }
 
