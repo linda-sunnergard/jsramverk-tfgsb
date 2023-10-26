@@ -26,10 +26,6 @@
             return false
         })
     })
-    // api.getDelayedTrains().then((result) => {
-    //     console.log(result)
-    //     delayedTrains.value = result;
-    // });
 
     function ticketHref(train) {
         currentTrainRef.value = train

@@ -44,7 +44,28 @@ export default {
 
         return response.data.delayed;
     },
-
+    getDelayedTrains: async function(trainId) {
+        const response = await this.graphqlQuery(`{
+            delayed(input: {OperationalTrainNumber: ${trainId}}) {
+                ActivityId,
+                OperationalTrainNumber,
+                LocationSignature,
+                FromLocation {
+                    LocationName,
+                    Priority,
+                    Order
+                },
+                ToLocation{
+                    LocationName,
+                    Priority,
+                    Order
+                },
+                AdvertisedTimeAtLocation,
+                EstimatedTimeAtLocation
+            }
+        }`)
+        return response.data.delayed;
+    },
     getTickets: async function() {
         // return await getFetcher(backendServer + "/tickets");
         const response = await this.graphqlQuery(`{

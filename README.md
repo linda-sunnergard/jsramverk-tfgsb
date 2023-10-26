@@ -25,5 +25,14 @@ När vi sedan startade frontend med `python3 -m http.server 9000` gick det att n
 Vi väljer att implementera vue till frontend-appen.
 
 ## Förbättringspotential
+
 - Göra om asynkrona delar till reaktiva props.
 - Utveckla frontend-tester?
+
+## Krav 1: Visa enbart försenade tåg
+
+Vi valde att genomföra en lösning där man växla mellan att antingen se alla tåg, eller enbart se de tåg som är försenade. Även när alla tåg visas, så är de färgkodade för ökad användbarhet. Tåg som är i tid visas som blåa markörer, och tåg som är försenade visas som röda markörer. Klickar man på ett försenat tåg antingen på kartan eller i listan, så skickas man vidare till tågets ärende-sida där man kan skapa ett nytt ärende för tåget. Man kan även följa det specifika tåget i realtid på en karta.
+Den största utmaningen med detta krav var att möjliggöra en filtrering av försenade och icke-försenade tåg. Detta inte var helt självklart utifrån den data som gick att få ut från Trafikverkets API när man efterfrågade information om tågens position. Lösningen blev att i backend skicka en separat request till Trafikverket för varje tåg för att få fram true/false om tåget var försenat baserat på EstimatedTimeAtLocation och AdvertisedTimeAtLocation. Detta skickades i sin tur med i det trainObject som skickades till frontend via socket.
+I frontend skapades ett reaktivt objekt (ref() object i Vue) som agerade som en flagga beroende på om användaren markerat att hen ville se alla tåg eller enbart försenade tåg. Därefter uppdaterades kartan med alla, eller enbart försenade, markörer.
+
+## Krav 2: Ändra befintliga ärenden

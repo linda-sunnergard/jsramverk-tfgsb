@@ -1,16 +1,11 @@
 <script setup>
 import 'leaflet/dist/leaflet.css';
 import L from "leaflet";
-import { onMounted, ref, inject, watch } from 'vue';
-import api from '../models/ApiModel.js';
-import { useRouter } from 'vue-router';
+import { onMounted, ref, inject } from 'vue';
 
 const socket = inject('socket').value;
 const zoom = ref(5);
-const {changeMap} = inject('changeMap');
-const {currentTrainRef, updateCurrentTrainRef} = inject('currentTrainRef');
-const socketIo = inject('socketIo');
-const router= useRouter();
+const {currentTrainRef} = inject('currentTrainRef');
 
 const standardIcon = L.divIcon({
     html: '<div class="map-marker-standard"></div>',
@@ -25,15 +20,6 @@ const delayedIcon = L.divIcon({
     iconAnchor: [12, 26],
 })
 
-function onMarkerClick(event) {
-    api.getDelayedTrains(event.popup._content).then((result) => {
-        updateCurrentTrainRef(result[0]);
-        });
-        let train = currentTrainRef.value
-        socketIo.emit('delayedHold', train)
-        router.push({path: "/ticket/"});
-};
-
 onMounted(() => {
     const map = L.map('map').setView([62.173276, 14.942265], 5);
 
@@ -47,30 +33,18 @@ onMounted(() => {
 
     socket.on("message", (data) => {
         let icon = data.delayed ? delayedIcon : standardIcon
-        if (changeMap.value == false || data.delayed == true) {
+        if (currentTrainRef.value.OperationalTrainNumber == data.trainnumber) {
             if (markers.hasOwnProperty(data.trainnumber)) {
                 let marker = markers[data.trainnumber]
 
                 marker.setLatLng(data.position);
             } else {
                 let marker = L.marker(data.position, {icon: icon}).bindPopup(data.trainnumber).addTo(map);
-                if (data.delayed == true) {
-                    marker.on('popupopen', onMarkerClick);
-                }
 
                 markers[data.trainnumber] = marker
             }
         }
     });
-
-    watch(changeMap, () => {
-        for (let trainNumber in markers) {
-            let marker = markers[trainNumber]
-
-            marker.removeFrom(map)
-            delete markers[trainNumber]
-        };
-    }, { immediate: true });
     
 })
 </script>
