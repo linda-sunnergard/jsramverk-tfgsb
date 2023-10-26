@@ -48,7 +48,7 @@ onMounted(() => {
     socket.on("message", (data) => {
         let icon = data.delayed ? delayedIcon : standardIcon
         if (changeMap.value == false || data.delayed == true) {
-            if (markers.hasOwnProperty(data.trainnumber)) {
+            if (Object.hasOwn(markers, data.trainnumber)) {
                 let marker = markers[data.trainnumber]
 
                 marker.setLatLng(data.position);

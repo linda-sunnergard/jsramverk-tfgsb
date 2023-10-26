@@ -1,5 +1,5 @@
 <script setup>
-import { RouterLink, RouterView } from 'vue-router'
+import { RouterView } from 'vue-router'
 import { provide, ref } from 'vue'
 import { io } from 'socket.io-client';
 

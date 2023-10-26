@@ -4,8 +4,6 @@
     import { RouterLink, useRouter } from 'vue-router';
 
     const codes = ref([])
-
-    const {currentTrainRef, updateCurrentTrainRef} = inject('currentTrainRef');
     const router = useRouter();
     let selected;
     const {currentTicket, updateCurrentTicket} = inject('currentTicket');
@@ -29,7 +27,7 @@
         <div class="ticket">
             <div class="old-tickets" id="old-tickets">
             <!-- <a href="/ticket" @click.prevent="handleBackButton">&lt- Tillbaka</a> -->
-            <RouterLink to="/ticket">&lt- Tillbaka</RouterLink>
+            <RouterLink to="/ticket">&lt;- Tillbaka</RouterLink>
             <h1>Nuvarande ärende</h1>
                 <div>{{ currentTicket.traindate }} - {{ currentTicket.code }} - {{ currentTicket.trainnumber }} - {{ currentTicket._id }} </div>
             </div>
@@ -38,8 +36,9 @@
                 <label>Orsakskod</label><br>
                 <select id="reason-code" v-model="selected">
                     <option 
-                        v-for="(code, index) in codes"
+                        v-for="(code) in codes"
                         :value="code.Code"
+                        :key="code._id"
                     >
                         {{ code.Code }} - {{ code.Level3Description }}
                     </option>

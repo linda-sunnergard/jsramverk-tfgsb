@@ -11,8 +11,8 @@
     const tickets = ref([]);
     const codes = ref([]);
     const selected = ref({});
-    const {currentTicket, updateCurrentTicket} = inject('currentTicket');
-    const {currentTrainRef, updateCurrentTrainRef} = inject('currentTrainRef');
+    const { updateCurrentTicket} = inject('currentTicket');
+    const { currentTrainRef } = inject('currentTrainRef');
     const socketIo = inject('socketIo')
 
     function updateTrains() {
@@ -64,7 +64,7 @@
 <template>
     <div class="ticket-container">
         <div class="ticket">
-            <a href="/home" @click.prevent="goHome()">&lt- Tillbaka</a>
+            <a href="/home" @click.prevent="goHome()">&lt;- Tillbaka</a>
             <h1>Nytt ärende #{{ tickets.length + 1 }}</h1>
             <h3 v-if="currentTrainRef.FromLocation">
                 {{ "Tåg från " + currentTrainRef.FromLocation[0].LocationName + " till " + currentTrainRef.ToLocation[0].LocationName + ". Just nu i " + currentTrainRef.LocationSignature + "." }}
@@ -74,8 +74,9 @@
                 <label>Orsakskod</label><br>
                 <select id="reason-code" v-model="selected">
                     <option 
-                        v-for="(code, index) in codes"
+                        v-for="(code) in codes"
                         :value="code.Code"
+                        :key="code._id"
                     >
                         {{ code.Code }} - {{ code.Level3Description }}
                     </option>
@@ -86,7 +87,7 @@
         <br>
         <div class="old-tickets" id="old-tickets">
             <h2>Befintliga ärenden</h2>
-            <div v-for="ticket in tickets">
+            <div v-for="ticket in tickets" :key="ticket._id">
                 <div>
                     {{ ticket.traindate }} - {{ ticket.code }} - {{ ticket.trainnumber }} - {{ ticket._id }}
                     <button @click="handleTicketUpdate(ticket)">Uppdatera ärende</button>

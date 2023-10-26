@@ -1,14 +1,12 @@
 <script setup>
     import { RouterLink, useRouter } from 'vue-router';
-    import { ref, watch } from 'vue';
+    import { ref } from 'vue';
 
     import { useAuthStore } from '../stores/auth.store';
-    import api from '../models/ApiModel.js';
     import utils from '../models/Utils.js';
     import { inject } from 'vue';
-    
-    const socket = inject('socket').value;
-    const {currentTrainRef, updateCurrentTrainRef} = inject('currentTrainRef');
+
+    const {currentTrainRef} = inject('currentTrainRef');
     const router= useRouter();
     const delayedTrains = ref([]);
     const socketIo = inject('socketIo');
@@ -51,12 +49,12 @@
 
 <template>
     <div class="delayed">
-        <RouterLink to="/" @click="logout">&lt- Logga ut</RouterLink>
+        <RouterLink to="/" @click="logout">&lt;- Logga ut</RouterLink>
         <br>
         <button @click="changeMapHandler" :key="mapMessage">{{ mapMessage }}</button>
         <h1>Försenade tåg</h1>
 
-        <div id="delayed-trains" class="delayed-trains" v-for="item in delayedTrains">
+        <div id="delayed-trains" class="delayed-trains" v-for="item in delayedTrains" :key="item.ActivityId">
             <div @click="ticketHref(item)">
                 <div class="train-number">
                     {{ item.OperationalTrainNumber }}

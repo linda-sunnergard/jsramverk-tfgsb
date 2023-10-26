@@ -21,29 +21,6 @@ export default {
             });
     },
 
-    getDelayedTrains: async function() {
-        const response = await this.graphqlQuery(`{
-            delayed {
-                ActivityId,
-                OperationalTrainNumber,
-                LocationSignature,
-                FromLocation {
-                    LocationName,
-                    Priority,
-                    Order
-                },
-                ToLocation{
-                    LocationName,
-                    Priority,
-                    Order
-                },
-                AdvertisedTimeAtLocation,
-                EstimatedTimeAtLocation
-            }
-        }`);
-
-        return response.data.delayed;
-    },
     getDelayedTrains: async function(trainId) {
         const response = await this.graphqlQuery(`{
             delayed(input: {OperationalTrainNumber: ${trainId}}) {
