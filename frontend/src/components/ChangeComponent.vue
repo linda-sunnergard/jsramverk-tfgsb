@@ -28,7 +28,6 @@ function updateTicket(selected, currentTicket) {
     <div class="ticket-container">
         <div class="ticket">
             <div class="old-tickets" id="old-tickets">
-                <!-- <a href="/ticket" @click.prevent="handleBackButton">&lt- Tillbaka</a> -->
                 <RouterLink to="/ticket">&lt;- Tillbaka</RouterLink>
                 <h1>Nuvarande ärende</h1>
                 <div>

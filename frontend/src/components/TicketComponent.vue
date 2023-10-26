@@ -102,4 +102,3 @@ function goHome() {
     </div>
 </template>
 
-<!-- // Using https://vuejs.org/guide/essentials/event-handling.html -->
