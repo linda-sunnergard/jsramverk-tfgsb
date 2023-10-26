@@ -1,25 +1,25 @@
 <script setup>
-    import { RouterLink, useRouter } from 'vue-router';
-    import { ref } from 'vue';
+import { RouterLink, useRouter } from 'vue-router'
+import { ref } from 'vue'
 
-    import { useAuthStore } from '../stores/auth.store';
+import { useAuthStore } from '../stores/auth.store'
 
-    const router= useRouter();
-    const username = ref("");
-    const password = ref("");
-    const message = ref("");
+const router = useRouter()
+const username = ref('')
+const password = ref('')
+const message = ref('')
 
-    async function submitLogin() {
-        const authStore = useAuthStore();
-        const login = await authStore.login(username.value, password.value);
+async function submitLogin() {
+    const authStore = useAuthStore()
+    const login = await authStore.login(username.value, password.value)
 
-        if (login.success) {
-            router.push('home');
-        } else {
-            console.error("Error logging in");
-            message.value = "Fel vid inloggning."
-        }
+    if (login.success) {
+        router.push('home')
+    } else {
+        console.error('Error logging in')
+        message.value = 'Fel vid inloggning.'
     }
+}
 </script>
 
 <template>

@@ -1,27 +1,27 @@
-import { useAuthStore } from '../stores/auth.store.js';
+import { useAuthStore } from '../stores/auth.store.js'
 
-const backendServer = import.meta.env.VITE_BACKEND;
+const backendServer = import.meta.env.VITE_BACKEND
 
 export default {
     graphqlQuery: async function (query) {
-        const authStore = useAuthStore();
+        const authStore = useAuthStore()
 
-        return fetch(backendServer + "/graphql", {
-            body: JSON.stringify({query: query}),
+        return fetch(backendServer + '/graphql', {
+            body: JSON.stringify({ query: query }),
             headers: {
                 'Content-Type': 'application/json',
-                'Accept': 'application/json',
+                Accept: 'application/json',
                 'X-Access-Token': authStore.token
             },
             method: 'POST'
         })
-            .then((response) =>  response.json())
+            .then((response) => response.json())
             .then((result) => {
-                return result;
-            });
+                return result
+            })
     },
 
-    getDelayedTrains: async function(trainId) {
+    getDelayedTrains: async function (trainId) {
         const response = await this.graphqlQuery(`{
             delayed(input: {OperationalTrainNumber: ${trainId}}) {
                 ActivityId,
@@ -41,9 +41,9 @@ export default {
                 EstimatedTimeAtLocation
             }
         }`)
-        return response.data.delayed;
+        return response.data.delayed
     },
-    getTickets: async function() {
+    getTickets: async function () {
         // return await getFetcher(backendServer + "/tickets");
         const response = await this.graphqlQuery(`{
             tickets {
@@ -52,12 +52,12 @@ export default {
                 trainnumber,
                 traindate
             }
-        }`);
+        }`)
 
-        return response.data.tickets;
+        return response.data.tickets
     },
 
-    postTicket: async function(newCode, newTrainnumber, newTraindate) {
+    postTicket: async function (newCode, newTrainnumber, newTraindate) {
         const response = await this.graphqlQuery(`mutation {
             createTicket(input: {
                 code: "${newCode}",
@@ -69,12 +69,12 @@ export default {
                 trainnumber,
                 traindate
             }
-        }`);
+        }`)
 
-        return response.data.createTicket;
+        return response.data.createTicket
     },
 
-    updateTicket: async function(ticketId, newCode) {
+    updateTicket: async function (ticketId, newCode) {
         const response = await this.graphqlQuery(`mutation {
             updateTicket(input: {
                 _id: "${ticketId}",
@@ -85,18 +85,18 @@ export default {
                 trainnumber,
                 traindate
             }
-        }`);
+        }`)
 
-        return response.data.updateTicket;
+        return response.data.updateTicket
     },
 
-    getCodes: async function() {
-        const response = await this.graphqlQuery("{ codes { Code, Level3Description } }");
+    getCodes: async function () {
+        const response = await this.graphqlQuery('{ codes { Code, Level3Description } }')
 
-        return response.data.codes;
+        return response.data.codes
     },
 
-    login: async function(username, password) {
+    login: async function (username, password) {
         const login = await this.graphqlQuery(`{
             authLogin(input: {
                 username: "${username}",
@@ -108,12 +108,12 @@ export default {
                 success,
                 message
             }
-        }`);
+        }`)
 
-        return login.data.authLogin;
+        return login.data.authLogin
     },
 
-    register: async function(username, password) {
+    register: async function (username, password) {
         const register = await this.graphqlQuery(`mutation {
             authRegister(input: {
                 username: "${username}",
@@ -125,8 +125,8 @@ export default {
                 success,
                 message
             }
-        }`);
+        }`)
 
-        return register.data.authRegister;
+        return register.data.authRegister
     }
-};
+}

@@ -57,7 +57,7 @@ a:visited {
     flex-direction: column;
 }
 
-.delayed-trains>div {
+.delayed-trains > div {
     display: flex;
     flex-direction: row;
     border-top: 1px solid #ccc;
@@ -66,7 +66,7 @@ a:visited {
     cursor: pointer;
 }
 
-.delayed-trains>div:nth-of-type(2n) {
+.delayed-trains > div:nth-of-type(2n) {
     background-color: #eee;
 }
 

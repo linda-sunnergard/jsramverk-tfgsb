@@ -1,6 +1,6 @@
-import { defineStore } from 'pinia';
+import { defineStore } from 'pinia'
 
-import api from '../models/ApiModel';
+import api from '../models/ApiModel'
 
 export const useAuthStore = defineStore({
     id: 'auth',
@@ -11,29 +11,29 @@ export const useAuthStore = defineStore({
     }),
     actions: {
         async login(username, password) {
-            const auth = await api.login(username, password);
+            const auth = await api.login(username, password)
 
-            this.token = auth.token;
-            this.username = auth.username;
-            this.userid = auth.userid;
+            this.token = auth.token
+            this.username = auth.username
+            this.userid = auth.userid
 
-            return auth;
+            return auth
         },
 
         async register(username, password) {
             const auth = await api.register(username, password)
 
-            this.token = auth.token;
-            this.username = auth.username;
-            this.userid = auth.userid;
+            this.token = auth.token
+            this.username = auth.username
+            this.userid = auth.userid
 
-            return auth;
+            return auth
         },
 
         logout() {
-            this.token = null;
-            this.username = null;
-            this.userid = null;
+            this.token = null
+            this.username = null
+            this.userid = null
         }
     }
-});
+})
