@@ -1,10 +1,10 @@
 <script setup>
-import Login from '../components/Login.vue'
+import LoginComponent from '../components/LoginComponent.vue'
 
 </script>
 
 <template>
   <main>
-    <Login />
+    <LoginComponent />
   </main>
 </template>

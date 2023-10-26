@@ -1,5 +1,5 @@
 <script setup>
-import Trains from '../components/Trains.vue'
+import TrainsComponent from '../components/TrainsComponent.vue'
 import MapTrain from '../components/MapTrain.vue'
 import { io } from "socket.io-client";
 import { provide, ref } from 'vue';
@@ -14,7 +14,7 @@ provide('socket', socket)
 <template>
     <main>
         <div class="container">
-            <Trains />
+            <TrainsComponent />
             <MapTrain />
         </div>
     </main>
